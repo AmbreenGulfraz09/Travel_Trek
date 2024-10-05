@@ -1,6 +1,8 @@
 
 # Create your views here.
 from django.shortcuts import render
+from django.template.loader import get_template
 
-def index(request):
-    return render(request, 'app_name/index.html')
+
+def home(request):
+    return render(request, 'base.html')
