@@ -3,8 +3,8 @@ body {
     background-color: rgba(255, 0, 0, 0.1) !important;
 }
 
-.navbar {
-    background-color: #F01111;
+.navbar{
+    background-color: #F01111 !important;
    
 }
 
@@ -23,8 +23,10 @@ body {
 .navbar-brand,
 .nav-link {
     color: #FFFFFF !important;
+    text-decoration: none;
    
 }
+
 
 /* Hover effect on nav-link in Bootstrap */
 /* Hover effect for nav-link */
