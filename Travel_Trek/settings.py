@@ -55,7 +55,7 @@ ROOT_URLCONF = 'Travel_Trek.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'App', 'templates')],
+        'DIRS':  [os.path.join(BASE_DIR, 'App/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -116,8 +116,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+# settings.py
+
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'App/static']
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Ensure the path is correct
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
