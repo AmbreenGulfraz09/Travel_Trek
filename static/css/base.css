@@ -1,67 +1,50 @@
 /* Modify the background color */
 body {
     background-color: rgba(255, 0, 0, 0.1) !important;
-}
-
-.navbar{
-    background-color: #F01111 !important;
-   
-}
-
-.logo-container{
-    display: inline-block;
     margin: 0;
     padding: 0;
-    
+    box-sizing: border-box;
 }
-.logo-container .logo{
-    width: 120px;  /* Set the width of the logo */
-    height: 120px; /* Set the height of the logo */
-    object-fit: contain;
+
+.navbar {
+    background-color: #F01111 !important;
+
 }
+
+.nav-item>a {
+    margin-right: 25px;
+}
+
 .navbar-text,
 .navbar-brand,
 .nav-link {
     color: #FFFFFF !important;
     text-decoration: none;
-   
+
+
 }
 
 
 /* Hover effect on nav-link in Bootstrap */
 /* Hover effect for nav-link */
 .navbar-nav .nav-link:hover {
-    
+
     /* Change hover color */
     transform: translateY(-8px);
     text-decoration: underline;
-   
+
 }
+
 /* Smooth transition effect for both hover and active states */
 .navbar-nav .nav-link {
     transition: transform 0.3s ease;
     /* Smooth transition */
 }
 
-.navbar-nav {
-    margin-right: 70px;
-    
-   
-
-}
-
-.nav-item {
-    justify-content: space-evenly;
-    margin-left: 20px;
-    position: relative;
-}
-
 /* Add underline to the active page link */
 .navbar-nav .nav-link.active {
-    transform: translateY(-8px); /* Keeps the active link elevated */
-            /* Makes the active link bold */
-    text-decoration: underline; 
-   
-
+    transform: translateY(-8px);
+    /* Keeps the active link elevated */
+    /* Makes the active link bold */
+    text-decoration: underline;
 }
-
