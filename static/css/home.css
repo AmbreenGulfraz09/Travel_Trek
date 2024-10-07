@@ -11,3 +11,7 @@
     text-align: center;
     padding: 20px;
 }
+.edge{
+    display: flex;
+    justify-content: center;
+}
