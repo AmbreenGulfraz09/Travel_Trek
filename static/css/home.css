@@ -3,15 +3,11 @@
     margin-top: 20px;
    margin-top: 20px;
 }
-.home-page>h3{
+ h3{
     color: red !important;
     text-align: center;
 }
-.home-page>p{
+ p{
     text-align: center;
     padding: 20px;
-}
-.edge{
-    display: flex;
-    justify-content: center;
 }
