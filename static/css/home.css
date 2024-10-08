@@ -5,12 +5,44 @@
 }
 
 h3 {
-    color: red !important;
+    color: #F01111 !important;
     text-align: center;
 }
 
-.chrome-btn{
-    background-color: red !important;
+.chrome-btn {
+    background-color: #F01111;
+    /* Button background */
+    border-radius: 20px;
+    /* Slight rounding of the corners */
+    padding: 10px 20px;
+    /* Space inside the button */
+    display: flex;
+    /* Aligns text and icon horizontally */
+    align-items: center;
+    /* Centers the icon and text vertically */
+    gap: 10px;
+    /* Space between the icon and text */
+    font-family: Arial, sans-serif;
+    /* Font for button text */
+    cursor: pointer;
+    /* Pointer cursor on hover */
+    color: #FFFFFF;
+    border: 1px solid #ccc;
+    transition: background-color 0.5s ease;
+}
+
+.chrome-btn:hover {
+    background-color: rgba(255, 0, 0, 0.7) !important;
+
+}
+
+.edge-btn {
+
+
+    border-radius: 15px;
+    border: 1px solid black;
+    cursor: pointer;
+
 }
 
 p {
@@ -18,3 +50,26 @@ p {
     padding: 20px;
 }
 
+.edge {
+    display: flex;
+    justify-content: center;
+}
+.container
+{
+    text-align: center;
+}
+
+.main-img {
+
+    background-image: url("/static/images/img1.jpg");
+    height: 500px;
+    /* Add height to see the background image */
+    width: 100%;
+    /* You can adjust the width as needed */
+    background-size:cover;
+    /* Ensure the image covers the div */
+    background-position:center center;
+    /* Center the image */
+    margin-top: 80px;
+
+}
