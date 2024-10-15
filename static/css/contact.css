@@ -1,0 +1,52 @@
+.pic1{
+    background-image: url("/static/images/castle.jpg");
+    height:400px;
+    /* Add height to see the background image */
+    width: 100%;
+    /* You can adjust the width as needed */
+    background-size:cover;
+    /* Ensure the image covers the div */
+    background-position: center center;
+    /* Center the image */
+   
+    border-radius: 12px;
+   
+}
+.pic2{
+    background-image: url("/static/images/road.jpg");
+    height:400px;
+    /* Add height to see the background image */
+    width: 100%;
+    /* You can adjust the width as needed */
+    background-size:cover;
+    /* Ensure the image covers the div */
+    background-position: center center;
+    /* Center the image */
+   
+    border-radius: 12px;
+    
+}
+
+
+#exampleInputEmail1 {
+    background-color: rgba(255, 0, 0, 0) !important;
+    border: 1px solid black !important; /* Solid black border */
+    box-shadow: none !important; /* Remove the default Bootstrap shadow */
+    width: 70% !important;
+  }
+
+  #exampleInputPassword1 {
+    background-color: rgba(255, 0, 0, 0) !important;
+    border: 1px solid black !important; /* Solid black border */
+    box-shadow: none !important;
+    width: 70% !important;
+  }
+
+  .btn-primary {
+    background-color:#F01111 !important; /* Custom button color */
+    border: none !important; /* Remove border */
+    padding: 10px 20px; /* Increase padding */
+  }
+  .btn-primary:hover{
+    background-color: rgba(255, 0, 0, 0.7) !important;
+  }

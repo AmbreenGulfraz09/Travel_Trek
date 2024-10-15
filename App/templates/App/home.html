@@ -8,55 +8,313 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Home</title>
 </head>
 
 <body>
-    <div class="home-page">
-        <div class="container my-5">
-            <h3>Understanding videos in Seconds</h3>
-            <p>Saving your time and get 99% of insights</p>
-            <div class="edge">
-                <button class="chrome-btn">
-                    <img src="https://img.icons8.com/?size=100&id=63785&format=png&color=000000" alt="Google" width="40"
-                        height="40"> Try for free on chrome</button>
-                <button class=" edge-btn ms-4"> <img
-                        src="https://img.icons8.com/?size=100&id=dGm9KIZPpukc&format=png&color=000000" width="40"
-                        height="40" alt=""></button>
-            </div>
-        </div>
-      
-        <!-- main image section -->
-        <div class="main-img">
 
+    <div class="container my-5 ">
+        <h2 class="hdng">Understanding videos in Seconds</h2>
+        <p> Your Copilot to Save your time and get 99% of insights</p>
+        <div class="edge">
+            <button class="chrome-btn">
+                <img src="https://img.icons8.com/?size=100&id=63785&format=png&color=000000" alt="Google" width="40"
+                    height="40"> Try for free on chrome</button>
+            <button class=" edge-btn ms-4"> <img
+                    src="https://img.icons8.com/?size=100&id=dGm9KIZPpukc&format=png&color=000000" width="40"
+                    height="40" alt=""></button>
         </div>
+    </div>
 
-        <div class="container my-5">
-            <div class="row">
-                <div class="col-md-3">
-                    <h4>Logo</h4>
-                    <h2>Automated Insights</h2>
-                    <p>Get in-depth insights in seconds from hour long videos</p>
-                </div>
-                <div class="col-md-3">
-                    <h4>Logo</h4>
-                    <h2>Automated Insights</h2>
-                    <p>Master Knowledge from videos in any Language</p>
-                </div>
-                <div class="col-md-3">
-                    <h4>Logo</h4>
-                    <h2>Automated Insights</h2>
-                    <p>Master Knowledge from videos in any Language</p>
-                </div>
-                <div class="col-md-3">
-                    <h4>Logo</h4>
-                    <h2>Automated Insights</h2>
-                    <p>Master Knowledge from videos in any Language</p>
-                </div>
-            </div>
-        </div>
+    <!-- main image section -->
+    <div class="main-img">
 
     </div>
+
+    <div class="container my-5 ">
+        <div class="row gx-5 gy-4 justify-content-center">
+            <!-- Added gx-5 for gap between columns and gy-4 for row spacing -->
+            <div class="col-md-3 d-flex flex-column justify-content-center align-items-center text-center">
+                <img src="/static/images/icons/thunder.png" width="30" height="30" alt="">
+                <h2 class="my-4">Automated Insights</h2>
+                <p style="text-align: center;">Get in-depth insights in seconds from long videos</p>
+            </div>
+            <div class="col-md-3 d-flex flex-column justify-content-center align-items-center text-center">
+                <img src="/static/images/icons/heart.png" width="30" height="30" alt="">
+                <h2 class="my-4">Automated Insights</h2>
+                <p style="text-align: center;">Master Knowledge from videos in any Language</p>
+            </div>
+            <div class="col-md-3 d-flex flex-column justify-content-center align-items-center text-center">
+                <img src="/static/images/icons/message.png" width="30" height="30" alt="">
+                <h2 class="my-4">Automated Insights</h2>
+                <p style="text-align: center;">Learning Faster and Deeper via over chat Bot</p>
+            </div>
+            <div class="col-md-3 d-flex flex-column justify-content-center align-items-center text-center">
+                <img src="/static/images/icons/scissor.png" width="30" height="30" alt="">
+                <h2 class="my-4">Automated Insights</h2>
+                <p style="text-align: center;">Ask Questions with a screenshot</p>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="container my-5">
+        <h3 style="font-weight:bold" class="text-center my-5">Use Cases</h3>
+        <div class="row gx-4 gy-4"> <!-- gx-* for horizontal gap, gy-* for vertical gap -->
+            <div class="col-md-6">
+                <div class="p-4 " style="border: 1px solid black; border-radius: 10px;">
+                    <div class="inside ">
+                        <img src="/static/images/icons/laptop.png" height="35" width="35">
+                        <h5>Courses</h5>
+                    </div>
+                    <p class="mx-5 m-2">This is some content for the second column.</p>
+                    <button class="ms-5 my-3">Get Started</button>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-4 " style="border: 1px solid black; border-radius: 10px;">
+                    <div class="inside ">
+                        <img src="/static/images/icons/talk.png" height="35" width="35">
+                        <h5>Interviews & Talks</h5>
+                    </div>
+
+                    <p class="mx-5 m-2">This is some content for the second column.</p>
+                    <button class="ms-5 my-3">Get Started</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-4 " style="border: 1px solid black; border-radius: 10px;">
+                    <div class="inside ">
+                        <img src="/static/images/icons/think.png" height="35" width="35">
+                        <h5>Vloggers & Creators</h5>
+                    </div>
+                    <p class="mx-5 m-2">This is some content for the second column.</p>
+                    <button class="ms-5 my-3">Get Started</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-4 " style="border: 1px solid black; border-radius: 10px;">
+                    <div class="inside ">
+                        <img src="/static/images/icons/confo.png" height="35" width="35">
+                        <h5>News & Conference</h5>
+                    </div>
+                    <p class="mx-5 m-2">This is some content for the second column.</p>
+                    <button class="ms-5 my-3">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    </div>
+    <div class=" b container my-3">
+        <h3 class="text-center my-5" style="font-weight:bold">Top Destination</h3>
+
+        <div class="row gx-3 gy-3" style="justify-content: center;">
+            <!-- Left side div (spans 4 columns) -->
+            <div class="  col-md-2">
+                <div class="pic1">
+
+                </div>
+            </div>
+
+            <!-- Right side div (spans 8 columns) -->
+            <div class="col-md-6 ">
+                <div class="row ">
+                    <div class="col-md-6 ">
+                        <!-- Add content as necessary -->
+                        <div class="row gx-3 gy-3">
+                            <div class="  col-md-12  ">
+                                <div class="pic2">
+
+                                </div>
+                            </div>
+                            <div class=" col-md-6 ">
+                                <div class="pic3">
+
+                                </div>
+                            </div>
+                            <div class=" col-md-6    ">
+                                <div class="pic3">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-4 mx-3 bg-info">
+                        <div class="row">
+                            <div class="col-md-6 ">
+
+                            </div>
+                            <div class="col-md-12">
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Frequently Asked Questions -->
+    <div class="container my-4">
+        <h2 class="text-center ">Frequently Asked Questions</h2>
+
+        <div class="accordion my-4" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Accordion Item #1
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <strong>This is the first item's accordion body.</strong> It is shown by default, until the
+                        collapse plugin adds the appropriate classes that we use to style each element. These classes
+                        control the overall appearance, as well as the showing and hiding via CSS transitions. You can
+                        modify any of this with custom CSS or overriding our default variables. It's also worth noting
+                        that just about any HTML can go within the <code>.accordion-body</code>, though the transition
+                        does limit overflow.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Accordion Item #2
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the
+                        collapse plugin adds the appropriate classes that we use to style each element. These classes
+                        control the overall appearance, as well as the showing and hiding via CSS transitions. You can
+                        modify any of this with custom CSS or overriding our default variables. It's also worth noting
+                        that just about any HTML can go within the <code>.accordion-body</code>, though the transition
+                        does limit overflow.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Accordion Item #3
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the
+                        collapse plugin adds the appropriate classes that we use to style each element. These classes
+                        control the overall appearance, as well as the showing and hiding via CSS transitions. You can
+                        modify any of this with custom CSS or overriding our default variables. It's also worth noting
+                        that just about any HTML can go within the <code>.accordion-body</code>, though the transition
+                        does limit overflow.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <div class="container my-5">
+        <h2 class="hdng">Try free for now </h2>
+        <!-- <p> Your Copilot to Save your time and get 99% of insights</p> -->
+        <div class="edge my-5">
+            <button class="chrome-btn">
+                <img src="https://img.icons8.com/?size=100&id=63785&format=png&color=000000" alt="Google" width="40"
+                    height="40"> Try for free on chrome</button>
+            <button class=" edge-btn ms-4"> <img
+                    src="https://img.icons8.com/?size=100&id=dGm9KIZPpukc&format=png&color=000000" width="40"
+                    height="40" alt=""></button>
+        </div>
+    </div>
+
+    <div class="container d-flex justify-content-center align-items-center ">
+        <h1 class="my-5 d-flex text-center" style="width: 50%;">Subscribe to our news letter and get all updates and news about Travel Trek</h1>
+
+    </div>
+
+    <div class="container"  >
+        <form class="row g-3" style="justify-content: center; align-items: center;">
+            <div class="col-md-5 my-5">
+                <label for="exampleInputEmail1" class="form-label"></label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
+            </div>
+            <div class="col-auto ">
+              <button type="submit" class="btn  ">Confirm identity</button>
+            </div>
+          </form>
+    
+    </din>
+
+    <!-- <div class="grid">
+        <h3 style="font-weight:bold" class="text-center">Use Cases</h3>
+        <div class="row ">
+            <div class=" g-col-6 ">
+                <img src="/static/images/icons/thunder.png" height="30" width="30">
+
+                <div class="inside">
+
+                    <h4>Courses</h4>
+                    <p>Get Notes and answers from Youtube and Khan Acsdemy videos</p>
+                    <button style="justify-content: center;">hello button</button>
+                </div>
+
+            </div>
+            <div class="g-col-6">
+
+                <img src="/static/images/icons/heart.png" height="30" width="30">
+                <div class="inside">
+                    <h4>Courses</h4>
+                    <p>Get Notes and answers from Youtube and Khan Acsdemy videos</p>
+                    <button style="justify-content: center;">hello button</button>
+                </div>
+            </div>
+        </div>
+        <div class="grid">
+            <div class="g-col-6">
+
+                <img src="/static/images/icons/heart.png" height="30" width="30">
+                <div class="inside">
+                    <h4>Courses</h4>
+                    <p>Get Notes and answers from Youtube and Khan Acsdemy videos</p>
+                    <button style="justify-content: center;">hello button</button>
+                </div>
+
+            </div>
+            <div class="g-col-6">
+
+                <img src="/static/images/icons/heart.png" height="30" width="30">
+                <div class="inside">
+                    <h4>Courses</h4>
+                    <p>Get Notes and answers from Youtube and Khan Acsdemy videos</p>
+                    <button style="justify-content: center;">hello button</button>
+                </div>
+
+            </div>
+
+
+        </div> -->
+
 </body>
 
 </html>

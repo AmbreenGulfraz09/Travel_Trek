@@ -1,18 +1,27 @@
 .home-page {
 
     margin-top: 20px;
-    margin-top: 20px;
 }
 
-h3 {
+.hdng {
     color: #F01111 !important;
     text-align: center;
+    font-weight: bold;
+}
+.container>p{
+    text-align: center !important;
+    margin: 30px;
+}
+
+
+h2 {
+    color: #F01111 !important;
 }
 
 .chrome-btn {
     background-color: #F01111;
-    /* Button background */
-    border-radius: 20px;
+    
+    border-radius: 12px;
     /* Slight rounding of the corners */
     padding: 10px 20px;
     /* Space inside the button */
@@ -36,6 +45,7 @@ h3 {
 
 }
 
+
 .edge-btn {
 
 
@@ -44,20 +54,20 @@ h3 {
     cursor: pointer;
 
 }
-
-p {
-    text-align: center;
-    padding: 20px;
+.inside{
+    
+    gap: 15px;
+    display: flex; 
+   
 }
+
 
 .edge {
     display: flex;
     justify-content: center;
 }
-.container
-{
-    text-align: center;
-}
+
+
 
 .main-img {
 
@@ -66,10 +76,168 @@ p {
     /* Add height to see the background image */
     width: 100%;
     /* You can adjust the width as needed */
-    background-size:cover;
+    background-size: cover;
     /* Ensure the image covers the div */
-    background-position:center center;
+    background-position: center center;
     /* Center the image */
     margin-top: 80px;
 
 }
+
+.p-4>button{
+    background-color: #F01111;
+    border-radius: 12px;
+   
+    padding: 10px;
+    width: 30%;
+    text-align: center;
+    justify-content: center;
+    /* Space inside the button */
+    display: flex;
+    /* Aligns text and icon horizontally */
+    
+    /* Centers the icon and text vertically */
+    gap: 20px;
+    /* Space between the icon and text */
+    font-family: Arial, sans-serif;
+    font-size: small;
+    /* Font for button text */
+    cursor: pointer;
+    /* Pointer cursor on hover */
+    color: #FFFFFF;
+    border: 1px solid #ccc;
+    transition: background-color 0.5s ease;
+}
+.p-4>button:hover {
+    background-color: rgba(255, 0, 0, 0.7) !important;
+
+}
+.pic1{
+    background-image: url("/static/images/long.jpg");
+    height:320px;
+    /* Add height to see the background image */
+    width: 100%;
+    /* You can adjust the width as needed */
+    background-size:cover;
+    /* Ensure the image covers the div */
+    background-position: center center;
+    /* Center the image */
+    
+    border: 1px solid black;
+    border-radius: 12px;
+}
+.b{
+    height:max-content
+}
+.pic2{
+    background-image: url("/static/images/lake.jpg");
+    height:150px;
+    /* Add height to see the background image */
+    width: 100%;
+    /* You can adjust the width as needed */
+    background-size:cover;
+    /* Ensure the image covers the div */
+    background-position: center center;
+    /* Center the image */
+   
+    border: 1px solid black;
+    border-radius: 12px;
+}
+.pic3{
+    background-image: url("/static/images/ring.jpg");
+    height:150px;
+    /* Add height to see the background image */
+    width: 100%;
+    /* You can adjust the width as needed */
+    background-size:cover;
+    /* Ensure the image covers the div */
+    background-position: center center;
+    /* Center the image */
+   
+    border: 1px solid black;
+    border-radius: 12px;
+}
+
+.pic4{
+    background-image: url("/static/images/resort.jpg");
+    height:150px;
+    /* Add height to see the background image */
+    width: 100%;
+    /* You can adjust the width as needed */
+    background-size:cover;
+    /* Ensure the image covers the div */
+    background-position: center center;
+    /* Center the image */
+    
+    border: 1px solid black;
+    border-radius: 12px;
+    margin-left: 20px;
+}
+.pic5{
+    background-image: url("/static/images/castle.jpg");
+    height:150px;
+    /* Add height to see the background image */
+    width: 100%;
+    /* You can adjust the width as needed */
+    background-size:cover;
+    /* Ensure the image covers the div */
+    background-position: center center;
+    /* Center the image */
+   
+    border: 1px solid black;
+    border-radius: 12px;
+    
+}
+
+
+/* Accor section */
+.accordion-body {
+    background-color: rgba(255, 0, 0, 0.1) !important;
+    color: #212529;             /* Text color black */
+}
+.accordion-button {
+    background-color: rgba(255, 0, 0, 0.1) !important;
+    color:black !important;
+                   /* Text color white */
+}
+
+.accordion-item {
+    border: 1px solid #343a40 !important;  /* Dark border around accordion */
+    margin-bottom: 20px;        /* Space between accordion items */
+}
+
+.accordion-button:focus {
+    box-shadow: none !important;
+}
+.accordion-header {
+    color: #F01111 !important;  /* Default heading color */
+    font-weight: bold;
+    transition: color 0.3s ease;  /* Smooth transition */
+}
+.accordion-button:not(.collapsed) {
+    color:#F01111 !important;  /* Color of heading when expanded */
+    font-weight: bold !important;
+}
+.btn{
+    background-color: #F01111 !important;
+    color:white !important ;
+    
+}
+.btn:hover{
+    background-color: rgba(255, 0, 0, 0.7) !important;
+    transition: background-color 0.5s ease;
+}
+.custom-input {
+    border: 1px solid black  !important;
+    box-shadow: none !important; /* Remove the default shadow */
+
+}
+
+/* email section */
+
+#exampleInputEmail1 {
+    background-color: rgba(255, 0, 0, 0) !important;
+    border: 1px solid black !important; /* Solid black border */
+    box-shadow: none !important; /* Remove the default Bootstrap shadow */
+   
+  }

@@ -4,10 +4,14 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+  
+    
 }
+
 
 .navbar {
     background-color: #F01111 !important;
+    padding: 20px !important;
 
 }
 
@@ -23,6 +27,8 @@ body {
 
 
 }
+
+
 
 
 /* Hover effect on nav-link in Bootstrap */
@@ -47,4 +53,11 @@ body {
     /* Keeps the active link elevated */
     /* Makes the active link bold */
     text-decoration: underline;
+}
+
+
+.footer{
+    height: 200px;
+    background-color: #F01111 !important;
+    color: #FFFFFF;
 }
