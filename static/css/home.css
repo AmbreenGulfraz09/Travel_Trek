@@ -36,7 +36,7 @@ h2 {
     cursor: pointer;
     /* Pointer cursor on hover */
     color: #FFFFFF;
-    border: 1px solid #ccc;
+    border: none;
     transition: background-color 0.5s ease;
 }
 
@@ -67,11 +67,22 @@ h2 {
     justify-content: center;
 }
 
-
-
 .main-img {
+    position: relative;
+    height: 500px; /* Adjust height or let content define it */
+    overflow: hidden; /* Prevent background image from overflowing */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 
+.main-img::before {
+    content: "";
+   position: absolute;
     background-image: url("/static/images/img1.jpg");
+    opacity: 0.9;
     height: 500px;
     /* Add height to see the background image */
     width: 100%;
@@ -80,7 +91,9 @@ h2 {
     /* Ensure the image covers the div */
     background-position: center center;
     /* Center the image */
-    margin-top: 80px;
+    
+    z-index: -1;
+   
 
 }
 
@@ -160,7 +173,7 @@ h2 {
 
 .pic4{
     background-image: url("/static/images/resort.jpg");
-    height:150px;
+    
     /* Add height to see the background image */
     width: 100%;
     /* You can adjust the width as needed */
@@ -168,26 +181,12 @@ h2 {
     /* Ensure the image covers the div */
     background-position: center center;
     /* Center the image */
-    
+    height:320px;
     border: 1px solid black;
     border-radius: 12px;
     
 }
-.pic5{
-    background-image: url("/static/images/castle.jpg");
-    height:150px;
-    /* Add height to see the background image */
-    width: 100%;
-    /* You can adjust the width as needed */
-    background-size:cover;
-    /* Ensure the image covers the div */
-    background-position: center center;
-    /* Center the image */
-   
-    border: 1px solid black;
-    border-radius: 12px;
-    
-}
+
 
 
 /* Accor section */

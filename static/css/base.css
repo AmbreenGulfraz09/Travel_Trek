@@ -15,15 +15,15 @@ body {
 
 }
 
-.nav-item>a {
-    margin-right: 25px;
+.nav-item:hover {
+    text-decoration: underline;
 }
 
 .navbar-text,
 .navbar-brand,
 .nav-link {
     color: #FFFFFF !important;
-    text-decoration: none;
+    text-decoration: none !important;
 
 
 }
@@ -37,27 +37,34 @@ body {
 
     /* Change hover color */
     transform: translateY(-8px);
-    text-decoration: underline;
+    text-decoration: underline !important;
 
 }
 
 /* Smooth transition effect for both hover and active states */
 .navbar-nav .nav-link {
     transition: transform 0.3s ease;
+    text-decoration: none;
     /* Smooth transition */
 }
 
 /* Add underline to the active page link */
-.navbar-nav .nav-link.active {
+.navbar-nav  {
     transform: translateY(-8px);
     /* Keeps the active link elevated */
     /* Makes the active link bold */
-    text-decoration: underline;
+  
 }
 
 
 .footer{
     height: 200px;
     background-color: #F01111 !important;
+    color: #FFFFFF;
+    
+}
+
+.content{
+    justify-content:space-between!important;
     color: #FFFFFF;
 }
