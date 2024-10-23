@@ -11,12 +11,13 @@ body {
 
 .navbar {
     background-color: #F01111 !important;
-    padding: 20px !important;
-
+    padding: 5px !important;
 }
+
 
 .nav-item:hover {
     text-decoration: underline;
+    color:#FFFFFF !important;
 }
 
 .navbar-text,
@@ -24,6 +25,8 @@ body {
 .nav-link {
     color: #FFFFFF !important;
     text-decoration: none !important;
+    font-size:15px !important;
+    
 
 
 }
@@ -58,9 +61,10 @@ body {
 
 
 .footer{
-    height: 200px;
+    height: 160px;
     background-color: #F01111 !important;
     color: #FFFFFF;
+   
     
 }
 
