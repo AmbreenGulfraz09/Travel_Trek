@@ -1,28 +1,37 @@
-.pic1{
-    background-image: url("/static/images/ring.jpg");
-   
-    height:350px;
-    /* Add height to see the background image */
-    width: 55%;
-    /* You can adjust the width as needed */
-    background-size:cover;
-    /* Ensure the image covers the div */
-    background-position: center center;
-    /* Center the image */
-   
-    border-radius: 12px;
+/* hero section */
+.main-img {
+    position: relative;
+    height: 500px; /* Adjust height or let content define it */
+    overflow: hidden; /* Prevent background image from overflowing */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
-.pic2{
-    background-image: url("/static/images/ring.jpg");
-   
-    height:350px;
+
+.main-img::before {
+    content: "";
+   position: absolute;
+    background-image: url("/static/images/img1.jpg");
+    opacity: 0.9;
+    height: 500px;
     /* Add height to see the background image */
-    width: 55%;
+    width: 100%;
     /* You can adjust the width as needed */
-    background-size:cover;
+    background-size: cover;
     /* Ensure the image covers the div */
     background-position: center center;
     /* Center the image */
- 
-    border-radius: 12px;
+    
+    z-index: -1;
+   
+
+}
+
+/* about containers */
+.col-md-4{
+    border: 1px solid black;
+    height: 100x;
+    
 }
