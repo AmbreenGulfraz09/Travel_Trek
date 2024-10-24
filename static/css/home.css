@@ -23,13 +23,13 @@ h2 {
     
     border-radius: 12px;
     /* Slight rounding of the corners */
-    padding: 10px 20px;
+    padding: 7px 12px;
     /* Space inside the button */
     display: flex;
     /* Aligns text and icon horizontally */
     align-items: center;
     /* Centers the icon and text vertically */
-    gap: 10px;
+    gap: 6px;
     /* Space between the icon and text */
     font-family: Arial, sans-serif;
     /* Font for button text */
@@ -139,9 +139,7 @@ h2 {
     border: 1px solid black;
     border-radius: 12px;
 }
-.b{
-    height:max-content
-}
+
 .pic2{
     background-image: url("/static/images/lake.jpg");
     height:150px;
@@ -186,6 +184,10 @@ h2 {
     border-radius: 12px;
     
 }
+.b{
+    height:max-content
+}
+
 
 
 
