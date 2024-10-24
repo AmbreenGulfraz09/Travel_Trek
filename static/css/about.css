@@ -30,8 +30,12 @@
 }
 
 /* about containers */
-.col-md-4{
+.info{
     border: 1px solid black;
-    height: 100x;
+    border-radius: 10px;
     
+    
+}
+p{
+    text-align: justify !important;
 }
