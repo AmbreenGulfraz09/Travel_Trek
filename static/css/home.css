@@ -21,9 +21,9 @@ h2 {
 .chrome-btn {
     background-color: #F01111;
     
-    border-radius: 12px;
+    border-radius: 10px;
     /* Slight rounding of the corners */
-    padding: 7px 12px;
+    padding: 10px 15px;
     /* Space inside the button */
     display: flex;
     /* Aligns text and icon horizontally */
