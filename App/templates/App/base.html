@@ -53,7 +53,7 @@
                         <li class="nav-item mx-3">
                             <button 
                             class="start nav-link {% if request.path == '/analysis/' %}active{% endif %}" 
-                            onclick="window.location.href='{% url 'analysis' %}'">
+                            onclick="window.location.href=`{% url 'analysis' %}`">
                             Start now
                         </button>
                         </li>

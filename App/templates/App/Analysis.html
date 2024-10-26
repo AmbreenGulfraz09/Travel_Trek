@@ -25,7 +25,7 @@
                         placeholder="Search">
                     <!-- Search button inside the input field -->
                     <button type="button" class="btn {% if request.path == '/result/' %}active{% endif %}"
-                        onclick="window.location.href='{% url 'result' %}'">Search</button>
+                        onclick="window.location.href=`{% url 'result' %}`">Search</button>
 
                 </div>
             </div>
