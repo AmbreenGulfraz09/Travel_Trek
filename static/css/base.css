@@ -7,7 +7,7 @@ body {
   
     
 }
-
+ /* navbar section */
 
 .navbar {
     background-color: #F01111 !important;
@@ -15,10 +15,7 @@ body {
 }
 
 
-.nav-item:hover {
-    text-decoration: underline;
-    color:#FFFFFF !important;
-}
+
 
 .navbar-text,
 .navbar-brand,
@@ -26,40 +23,48 @@ body {
     color: #FFFFFF !important;
     text-decoration: none !important;
     font-size:15px !important;
-    
+    transition: transform 0.3s ease !important;
+    text-decoration: none;
 
 
 }
 
 
-
-
-/* Hover effect on nav-link in Bootstrap */
-/* Hover effect for nav-link */
-.navbar-nav .nav-link:hover {
-
-    /* Change hover color */
-    transform: translateY(-8px);
-    text-decoration: underline !important;
-
+/* start now button */
+.start{
+    outline: none !important;
+    border:none !important;
+    background-color: black !important;
+    border-radius: 10%;
+    text-decoration: none  !important;
+  
+   
 }
+.start:hover{
+    background-color: rgb(119, 109, 109) !important;
+    transition: background-color 0.3s ease ;
+   
+}
+
 
 /* Smooth transition effect for both hover and active states */
-.navbar-nav .nav-link {
-    transition: transform 0.3s ease;
-    text-decoration: none;
-    /* Smooth transition */
-}
 
 /* Add underline to the active page link */
-.navbar-nav  {
+.navbar-nav .nav-link:hover:not(.start) {
     transform: translateY(-8px);
-    /* Keeps the active link elevated */
-    /* Makes the active link bold */
-  
+    text-decoration: underline !important;
+    /* transition: transform 0.3s ease !important; */
 }
+/* Transition effect for both hover and active states, excluding .no-hover-effect */
 
 
+
+
+
+
+
+/* 
+footer section */
 .footer{
     height: 160px;
     background-color: #F01111 !important;
@@ -72,3 +77,4 @@ body {
     justify-content:space-between!important;
     color: #FFFFFF;
 }
+
