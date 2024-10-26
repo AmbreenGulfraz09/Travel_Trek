@@ -52,7 +52,7 @@
                         </li>
                         <li class="nav-item mx-3">
                             <button 
-                            class=" start nav-link no-hover-effect {% if request.path == '/analysis/' %}active{% endif %}"  
+                            class="start nav-link {% if request.path == '/analysis/' %}active{% endif %}" 
                             onclick="window.location.href='{% url 'analysis' %}'">
                             Start now
                         </button>

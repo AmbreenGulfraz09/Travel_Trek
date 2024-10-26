@@ -11,3 +11,7 @@ def contact(request):
 
 def analysis(request):
     return render(request, 'App/Analysis.html')
+
+def result(request):
+    return render(request, 'App/Result.html')
+
