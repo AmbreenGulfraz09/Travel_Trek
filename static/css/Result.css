@@ -11,3 +11,32 @@
 .text>p{
     text-align: justify !important;
 }
+
+ /* right cntainer upper section kind of navbar inside a box */
+
+.text-color{
+    background-color: rgba(255, 0, 0, 0.2) !important;
+    border-radius: 10px;
+    text-align: justify !important;
+}
+.right-container{
+    box-shadow: 10px 10px 20px rgba(240, 42, 42, 0.9);
+    
+}
+.summary-text{
+    overflow-y: scroll;
+    overflow-y: auto;
+    height: 500px;
+}
+
+/* search section */
+
+.btn{
+    background-color: #F01111 !important;
+    color:white !important ;
+    
+}
+.btn:hover{
+    background-color: rgba(255, 0, 0, 0.7) !important;
+    transition: background-color 0.5s ease;
+}
