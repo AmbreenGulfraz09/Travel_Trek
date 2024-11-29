@@ -1,12 +1,15 @@
 {% extends 'App/base.html' %}
 {% load static %}
-
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 {% block content %}
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analysis</title>
@@ -24,7 +27,7 @@
                     <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
                         placeholder="Search">
                     <!-- Search button inside the input field -->
-                    <button type="button" class="btn {% if request.path == '/result/' %}active{% endif %}"
+                    <button type="button" class="btn {% if request.path == '/result/' %}active{% endif %} " style="color: white;"
                         onclick="window.location.href=`{% url 'result' %}`">Search</button>
 
                 </div>
