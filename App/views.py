@@ -17,3 +17,6 @@ def result(request):
 
 def admin(request):
      return render(request, 'App/AdminLogin.html')
+
+def adminDashboard(request):
+     return render(request, 'App/AdminDashboard.html')

@@ -22,58 +22,56 @@
     <!-- Header Section -->
     <header>
         <div class="container-fluid px-0">
-            <nav class="navbar navbar-expand-lg  ">
-
+            <nav class="navbar navbar-expand-lg">
                 <!-- Logo section -->
                 <a href="{% url 'home' %}" class="navbar-brand mb-0">
                     <img src="{% static '/images/logo.ico' %}" alt="Logo" width="55" height="55" class="logo">
                 </a>
-
+    
                 <!-- Toggler for mobile view -->
-                <button class="navbar-toggler mr-auto " type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-                    aria-label="Toggle navigation">
+                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
-                <!-- Navbar content, collapsible for smaller screens -->
-                <div class="collapse navbar-collapse " id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Admin section -->
-                        <li class="nav-item mx-2 dropdown">
-                            <button class=" btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="color: black;">
-                                <span class="material-symbols-outlined">passkey</span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="dropdown-item {% if request.path == '/admin/' %} active {% endif %}" href="{% url 'admin' %}">Login as Admin</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="nav-item mx-2">
-                            <a class="nav-link {% if request.path == '/' %}{% endif %}" href="{% url 'home' %}">Home</a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link {% if request.path == '/about/' %}active{% endif %}"
-                                href="{% url 'about' %}">About</a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link {% if request.path == '/contact/' %}active{% endif %}"
-                                href="{% url 'contact' %}">Contact</a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <button class="start nav-link {% if request.path == '/analysis/' %}active{% endif %}"
-                                onclick="window.location.href=`{% url 'analysis' %}`">
-                                Start now
-                            </button>
-                        </li>
-                       
-
-                    </ul>
+    
+                <!-- Offcanvas for the navbar -->
+                <div class="offcanvas offcanvas-end  text-white" style="background-color: #F01111;" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav ms-auto">
+                            <!-- Admin section -->
+                            <li class="nav-item mx-2 dropdown">
+                                <button class="btn dropdown-toggle text-white" data-bs-toggle="dropdown" aria-expanded="false" style="color: white;">
+                                    <span class="material-symbols-outlined">passkey</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item {% if request.path == '/admin/' %} active {% endif %}" href="{% url 'admin' %}">Login as Admin</a></li>
+                                </ul>
+                            </li>
+    
+                            <li class="nav-item mx-2">
+                                <a class="nav-link text-white {% if request.path == '/' %}{% endif %}" href="{% url 'home' %}">Home</a>
+                            </li>
+                            <li class="nav-item mx-2">
+                                <a class="nav-link text-white {% if request.path == '/about/' %}active{% endif %}" href="{% url 'about' %}">About</a>
+                            </li>
+                            <li class="nav-item mx-2">
+                                <a class="nav-link text-white {% if request.path == '/contact/' %}active{% endif %}" href="{% url 'contact' %}">Contact</a>
+                            </li>
+                            <li class="nav-item mx-2">
+                                <button class="start nav-link text-white {% if request.path == '/analysis/' %}active{% endif %}" onclick="window.location.href=`{% url 'analysis' %}`">
+                                    Start now
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-
             </nav>
         </div>
-
+    </header>
+    
     </header>
 
     <!-- Main Content Section -->
