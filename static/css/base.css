@@ -87,13 +87,16 @@ footer section */
         'opsz' 48;
        
 }
-.admin-btn{
-    font-size: 20px;
-    outline: none !important;
-    border:none !important;
-    background: none;
-    width: 10%;
-    border-radius: 10% !important;
-    text-decoration: none  !important;
-    gap: 2px !important;
+/* Enable hover behavior for dropdown */
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+.dropdown-menu {
+    transition: opacity 5s ease-in-out ;
+    opacity: 0;
+    margin-top: 10px; /* To give a dropdown effect */
+}
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    margin-top: 0;
 }

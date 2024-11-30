@@ -45,7 +45,7 @@
                                 <span class="material-symbols-outlined">passkey</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="dropdown-item" href="#">Login as Admin</a></li>
+                                <li><a class="dropdown-item {% if request.path == '/admin/' %} active {% endif %}" href="{% url 'admin' %}">Login as Admin</a></li>
                             </ul>
                         </li>
 

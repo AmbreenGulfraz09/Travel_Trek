@@ -15,3 +15,5 @@ def analysis(request):
 def result(request):
     return render(request, 'App/Result.html')
 
+def admin(request):
+     return render(request, 'App/AdminLogin.html')
