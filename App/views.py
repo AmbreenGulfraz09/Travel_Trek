@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from googleapiclient.discovery import build
-API_KEY = 'AIzaSyCOJWcytgmB00vYB4bZf5GpVLYoWuIuS0g'
+key = "api key"
 
 
 def home(request):
@@ -36,7 +36,7 @@ def adminDashboard(request):
 
 def fetch_top_youtube_videos(query):
     try:
-        youtube = build('youtube', 'v3', developerKey=API_KEY)
+        youtube = build('youtube', 'v3', developerKey=key)
         response = youtube.search().list(
             q=query,
             part='snippet',
