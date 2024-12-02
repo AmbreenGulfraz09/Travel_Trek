@@ -9,7 +9,7 @@
 <html lang="en">
 
 <head>
-    
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analysis</title>
@@ -18,22 +18,21 @@
 
 <body>
     <div class="container-fluid my-5">
-        <h3 style="color: #F01111;text-align: center;">What can i help you with?</h3>
-        <form class="row justify-content-center align-items-center my-3">
+        <h3 style="color: #F01111; text-align: center;">What can I help you with?</h3>
+        <form class="row justify-content-center align-items-center my-3" action="{% url 'search_videos' %}"
+            method="POST">
+            {% csrf_token %}
             <!-- Search input group -->
             <div class="col-md-5 my-2">
                 <div class="input-group">
                     <!-- Search input field -->
-                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                        placeholder="Search">
-                    <!-- Search button inside the input field -->
-                    <button type="button" class="btn {% if request.path == '/result/' %}active{% endif %} " style="color: white;"
-                        onclick="window.location.href=`{% url 'result' %}`">Search</button>
-
+                    <input type="text" name="query" class="form-control" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Search" required>
+                    <!-- Search button -->
+                    <button type="submit" class="btn" style="color: white; background-color: #F01111;">Search</button>
                 </div>
             </div>
         </form>
-
     </div>
 
     <div class=" container my-5  justify-content-center  " style="width: 50%;">

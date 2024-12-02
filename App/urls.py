@@ -21,8 +21,9 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
-     path('analysis/', views.analysis, name='analysis'),
-      path('result/', views.result, name='result'),
-      path('admin/',views.admin, name='admin'),
-      path('adminDashboard/',views.adminDashboard,name='adminDashboard'),
+    path('analysis/', views.analysis, name='analysis'),
+    path('result/', views.result, name='result'),
+    path('admin/', views.admin, name='admin'),
+    path('adminDashboard/', views.adminDashboard, name='adminDashboard'),
+    path('search/', views.search_videos, name='search_videos'),
 ]

@@ -9,7 +9,7 @@
 <html lang="en">
 
 <head>
-   
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/Result.css">
@@ -21,197 +21,58 @@
         <!-- video section -->
         <div class="row gx-5">
             <div class="col-md-6">
-                <!-- youtube video details -->
-                <div class="col-md-12 mb-5"> <!-- Added mb-3 for gap -->
-                    <!-- video container -->
-                    <div class="row ">
-                        <!-- picture section -->
+                {% if videos %}
+                {% for video in videos %}
+                <!-- YouTube video details -->
+                <div class="col-md-12 mb-5">
+                    <!-- Video container -->
+                    <div class="row">
+                        <!-- Picture section -->
                         <div class="col-md-5">
                             <div class="pic">
-                                <!-- Picture content can go here -->
+                                <!-- Video thumbnail -->
+                                <img src="{{ video.thumbnail }}" alt="Thumbnail" class="img-fluid"
+                                    style="width: 100%; height: auto;">
                             </div>
                         </div>
-                        <!-- text section -->
+                        <!-- Text section -->
                         <div class="col-md-7">
-                            <!-- right side video text section  -->
-                            <div class="row ">
-                                <!-- upper text section -->
+                            <!-- Right-side video text section -->
+                            <div class="row">
+                                <!-- Upper text section -->
                                 <div class="col-md-12">
                                     <div class="text">
-                                        <p>Lorem ipsum dolor sit amet
-                                        </p>
+                                        <p><strong>{{ video.title }}</strong></p>
                                     </div>
                                 </div>
-                                <!-- picture and text youtube -->
+                                <!-- Picture and text YouTube -->
                                 <div class="col-md-12">
-
-                                    <img src="/static/images/icons/gift.png" alt="" width="30" height="30">
-                                    Taimoor Malik
-
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#F01111"
+                                        class="bi bi-play-btn" viewBox="0 0 16 16">
+                                        <path
+                                            d="M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
+                                        <path
+                                            d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z" />
+                                    </svg>
+                                    <a href="{{ video.url }}" target="_blank"
+                                        style="text-decoration: none; color: #F01111;">Watch Video</a>
                                 </div>
                             </div>
-                            <div class="col-md-12 mt-2 ">
+                            <!-- Description -->
+                            <div class="col-md-12 mt-2">
                                 <div class="text">
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam, labore?</p>
+                                    <p>{{ video.description }}</p>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
-
-                <div class="col-md-12 mb-5"> <!-- Added mb-3 for gap -->
-                    <!-- video container -->
-                    <div class="row ">
-                        <!-- picture section -->
-                        <div class="col-md-5">
-                            <div class="pic">
-                                <!-- Picture content can go here -->
-                            </div>
-                        </div>
-                        <!-- text section -->
-                        <div class="col-md-7">
-                            <!-- right side video text section  -->
-                            <div class="row ">
-                                <!-- upper text section -->
-                                <div class="col-md-12">
-                                    <div class="text">
-                                        <p>Lorem ipsum dolor sit amet
-                                        </p>
-                                    </div>
-                                </div>
-                                <!-- picture and text youtube -->
-                                <div class="col-md-12">
-
-                                    <img src="/static/images/icons/gift.png" alt="" width="30" height="30">
-                                    Taimoor Malik
-
-                                </div>
-                            </div>
-                            <div class="col-md-12 mt-2 ">
-                                <div class="text">
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam, labore?</p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="col-md-12 mb-5"> <!-- Added mb-3 for gap -->
-                    <!-- video container -->
-                    <div class="row ">
-                        <!-- picture section -->
-                        <div class="col-md-5">
-                            <div class="pic">
-                                <!-- Picture content can go here -->
-                            </div>
-                        </div>
-                        <!-- text section -->
-                        <div class="col-md-7">
-                            <!-- right side video text section  -->
-                            <div class="row ">
-                                <!-- upper text section -->
-                                <div class="col-md-12">
-                                    <div class="text">
-                                        <p>Lorem ipsum dolor sit amet
-                                        </p>
-                                    </div>
-                                </div>
-                                <!-- picture and text youtube -->
-                                <div class="col-md-12">
-
-                                    <img src="/static/images/icons/gift.png" alt="" width="30" height="30">
-                                    Taimoor Malik
-
-                                </div>
-                            </div>
-                            <div class="col-md-12 mt-2 ">
-                                <div class="text">
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam, labore?</p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-md-12 mb-5"> <!-- Added mb-3 for gap -->
-                    <!-- video container -->
-                    <div class="row ">
-                        <!-- picture section -->
-                        <div class="col-md-5">
-                            <div class="pic">
-                                <!-- Picture content can go here -->
-                            </div>
-                        </div>
-                        <!-- text section -->
-                        <div class="col-md-7">
-                            <!-- right side video text section  -->
-                            <div class="row ">
-                                <!-- upper text section -->
-                                <div class="col-md-12">
-                                    <div class="text">
-                                        <p>Lorem ipsum dolor sit amet
-                                        </p>
-                                    </div>
-                                </div>
-                                <!-- picture and text youtube -->
-                                <div class="col-md-12">
-
-                                    <img src="/static/images/icons/gift.png" alt="" width="30" height="30">
-                                    Taimoor Malik
-
-                                </div>
-                            </div>
-                            <div class="col-md-12 mt-2 ">
-                                <div class="text">
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam, labore?</p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-md-12 mb-5"> <!-- Added mb-3 for gap -->
-                    <!-- video container -->
-                    <div class="row ">
-                        <!-- picture section -->
-                        <div class="col-md-5">
-                            <div class="pic">
-                                <!-- Picture content can go here -->
-                            </div>
-                        </div>
-                        <!-- text section -->
-                        <div class="col-md-7">
-                            <!-- right side video text section  -->
-                            <div class="row ">
-                                <!-- upper text section -->
-                                <div class="col-md-12">
-                                    <div class="text">
-                                        <p>Lorem ipsum dolor sit amet
-                                        </p>
-                                    </div>
-                                </div>
-                                <!-- picture and text youtube -->
-                                <div class="col-md-12">
-
-                                    <img src="/static/images/icons/gift.png" alt="" width="30" height="30">
-                                    Taimoor Malik
-
-                                </div>
-                            </div>
-                            <div class="col-md-12 mt-2 ">
-                                <div class="text">
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam, labore?</p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-
+                {% endfor %}
+                {% else %}
+                <p>No results found for your search.</p>
+                {% endif %}
             </div>
+
             <!-- right side container where content will be generated -->
             <div class="  col-md-5 ">
                 <!-- upper section where logo and other content will be included -->
