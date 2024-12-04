@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from googleapiclient.discovery import build
-key = "api key"
+key = "AIzaSyBNd0vuYYBgDyve535Y32iO70TMcVNN7Hs"
 
 
 def home(request):
