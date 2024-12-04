@@ -1,7 +1,11 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from googleapiclient.discovery import build
-key = "api key"
+from dotenv import load_dotenv, dotenv_values
+import os
+# loading variables from .env file
+load_dotenv()
+key = os.getenv("YoutubeAPI_KEY")
 
 
 def home(request):
