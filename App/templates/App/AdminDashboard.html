@@ -16,8 +16,84 @@
         .sidebar {
             position: sticky;
             top: 0;
-            height: 100vh; /* Full height to make sure it stays in place */
-            overflow-y: auto; /* Scroll if content overflows */
+            height: 100vh;
+            /* Full height to make sure it stays in place */
+            overflow-y: auto;
+            /* Scroll if content overflows */
+        }
+
+        /* Vertical red line between sidebar and content */
+        .seperator {
+            border-left: 1px solid red;
+            /* Vertical red line */
+            height: 100vh;
+            /* Full height of the container */
+            margin-left: 15px;
+            /* Optional: Add space between the sidebar and the content */
+        }
+
+        .btn {
+            background-color: #F01111 !important;
+            color: white;
+
+        }
+
+        .btn:hover {
+            background-color: rgba(255, 0, 0, 0.7) !important;
+            transition: background-color 0.5s ease;
+        }
+        .text-color{
+                color: #F01111;
+            }
+        /* adjusting buttons colors  */
+
+        /* Adjustments for smaller screen sizes */
+        @media (max-width: 768px) {
+            .sidebar {
+                font-size: 12px;
+                /* Smaller text for sidebar */
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+
+
+            .container-fluid {
+                padding: 0 10px;
+                /* Add padding to the sides on smaller screens */
+            }
+
+            .table-responsive {
+                font-size: 10px;
+                /* Smaller table text */
+            }
+
+            h4,
+            p {
+                font-size: 11px;
+                /* Smaller heading */
+            }
+
+            .row {
+                margin-bottom: 10px;
+                /* Reduce space between rows */
+            }
+
+            .button button {
+                font-size: 11px;
+                /* Smaller buttons */
+                padding: 5px 10px;
+            }
+
+            /* Adjust table columns for smaller screens */
+            table th,
+            table td {
+                font-size: 11px;
+                /* Smaller table text */
+                padding: 5px;
+                /* Less padding for smaller screens */
+            }
+           
         }
     </style>
 </head>
@@ -26,22 +102,22 @@
     <div class="container-fluid">
         <div class="row">
             <!-- dashboard section (sidebar on the left) -->
-            <div class="col-4 col-md-3 sidebar my-5">
-                <div class="row">
-                    <div class="col-md-12">
+            <div class="col-3 col-md-2 sidebar my-5" style="text-align: center; ">
+                <div class="row text-color">
+                    <div class="col-md-12" style="cursor:pointer;">
                         <p>Dashboard</p>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="cursor:pointer;">
                         <p>Add Admin</p>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="cursor:pointer;">
                         <p>Analytics</p>
                     </div>
                 </div>
             </div>
 
             <!-- users data section (content area) -->
-            <div class="col-8 col-md-9">
+            <div class="seperator col-8 col-md-9">
                 <div class="row my-3">
                     <div class="col-6 col-md-6">
                         <h4>User Stored Data</h4>
@@ -71,17 +147,21 @@
                                         <td>Mark</td>
                                         <td>Otto</td>
                                         <td>@mdo</td>
+                                        <td>@mdo</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">2</th>
                                         <td>Jacob</td>
                                         <td>Thornton</td>
                                         <td>@fat</td>
+                                        <td>Thornton</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">3</th>
-                                        <td colspan="2">Larry the Bird</td>
+                                        <td>Larry the Bird</td>
                                         <td>@twitter</td>
+                                        <td>@twitter</td>
+                                        <td>Thornton</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -93,12 +173,12 @@
                 <div class="row my-5">
                     <div class="col-6 col-md-6 d-flex justify-content-start">
                         <div class="button">
-                            <button>Previous</button>
+                            <button class="btn ">Previous</button>
                         </div>
                     </div>
                     <div class="col-6 col-md-6 d-flex justify-content-end text-end">
                         <div class="button">
-                            <button>Next</button>
+                            <button class="btn ">Next</button>
                         </div>
                     </div>
                 </div>
