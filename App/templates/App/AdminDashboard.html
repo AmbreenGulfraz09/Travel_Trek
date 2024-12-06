@@ -6,28 +6,106 @@
 {% block content %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        /* Ensuring the sidebar stays sticky */
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh; /* Full height to make sure it stays in place */
+            overflow-y: auto; /* Scroll if content overflows */
+        }
+    </style>
 </head>
+
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col md-3">
+            <!-- dashboard section (sidebar on the left) -->
+            <div class="col-4 col-md-3 sidebar my-5">
                 <div class="row">
-                    Dashboard
+                    <div class="col-md-12">
+                        <p>Dashboard</p>
+                    </div>
+                    <div class="col-md-12">
+                        <p>Add Admin</p>
+                    </div>
+                    <div class="col-md-12">
+                        <p>Analytics</p>
+                    </div>
                 </div>
-<!-- <h1>me</h1> -->
             </div>
-            <div class="col-md-8">
-                <div class="row">
-                    
+
+            <!-- users data section (content area) -->
+            <div class="col-8 col-md-9">
+                <div class="row my-3">
+                    <div class="col-6 col-md-6">
+                        <h4>User Stored Data</h4>
+                    </div>
+                    <div class="col-6 col-md-6 text-end">
+                        <p>admin name</p>
+                    </div>
                 </div>
-                <!-- <h1>you</h1> -->
+
+                <!-- Table Section -->
+                <div class="row my-5">
+                    <div class="col-12">
+                        <div class="table-responsive"> <!-- Make the table responsive -->
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">User Query</th>
+                                        <th scope="col">Video Metadata</th>
+                                        <th scope="col">Summary</th>
+                                        <th scope="col">Guide</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td>Mark</td>
+                                        <td>Otto</td>
+                                        <td>@mdo</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">2</th>
+                                        <td>Jacob</td>
+                                        <td>Thornton</td>
+                                        <td>@fat</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">3</th>
+                                        <td colspan="2">Larry the Bird</td>
+                                        <td>@twitter</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination Section -->
+                <div class="row my-5">
+                    <div class="col-6 col-md-6 d-flex justify-content-start">
+                        <div class="button">
+                            <button>Previous</button>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-6 d-flex justify-content-end text-end">
+                        <div class="button">
+                            <button>Next</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </body>
+
 </html>
 {% endblock %}
