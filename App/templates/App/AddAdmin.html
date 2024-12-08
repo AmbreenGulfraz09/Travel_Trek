@@ -1,0 +1,54 @@
+{% extends 'App/AdminDashboardbase.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Admin</title>
+</head>
+<style>
+
+    .container {
+
+        max-width: 400px;
+        /* Optional: Restrict form width */
+        background-color: #fff;
+        /* Optional: Add a white background */
+        padding: 20px;
+        /* Add some padding inside the container */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        /* Add a subtle shadow */
+        border-radius: 8px;
+        /* Rounded corners */
+
+    }
+</style>
+
+
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh; background-color: #f8f9fa;">
+    <div class="container">
+        <div class="col-12 col-md-12">
+            <h3 style="color: red; text-align: center;">Add New Admin</h3>
+            <form>
+                <div class="mb-3">
+                    <input type="text" class="form-control" placeholder="Name">
+                </div>
+                <div class="mb-3">
+                    <input type="email" class="form-control" placeholder="Email">
+                </div>
+                <div class="mb-3">
+                    <input type="password" class="form-control" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Add</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

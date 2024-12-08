@@ -1,0 +1,138 @@
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* Ensuring the sidebar stays sticky */
+       
+        .sidebar {
+            position: sticky;
+            height: 100vh;
+            /* Full height to make sure it stays in place */
+            overflow: hidden;
+            /* Scroll if content overflows */
+        }
+
+        /* Vertical red line between sidebar and content */
+        .seperator {
+            border-right: 1px solid red;
+            /* Vertical red line */
+            height: 100vh;
+            /* Full height of the container */
+            margin-right: 15px;
+            /* Optional: Add space between the sidebar and the content */
+        }
+
+
+        .btn {
+            background-color: #F01111 !important;
+            color: white;
+
+        }
+
+        .btn:hover {
+            background-color: rgba(255, 0, 0, 0.7) !important;
+            transition: background-color 0.5s ease;
+        }
+
+        .text-color {
+            color: #F01111;
+        }
+
+        a {
+            text-decoration: none !important;
+            color: #F01111;
+
+        }
+
+        a:hover {
+            color: inherit;
+
+            text-decoration: none;
+            /* Ensures no underline on hover */
+        }
+
+        /* adjusting buttons colors  */
+
+        /* Adjustments for smaller screen sizes */
+        @media (max-width: 768px) {
+            .sidebar {
+                font-size: 12px;
+                /* Smaller text for sidebar */
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+
+
+            .container-fluid {
+                padding: 0 10px;
+                /* Add padding to the sides on smaller screens */
+            }
+
+            .table-responsive {
+                font-size: 10px;
+                /* Smaller table text */
+            }
+
+            h4,
+            p {
+                font-size: 11px;
+                /* Smaller heading */
+            }
+
+            .row {
+                margin-bottom: 10px;
+                /* Reduce space between rows */
+            }
+
+            .button button {
+                font-size: 10px;
+                /* Smaller buttons */
+                padding: 3px 7px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row" >
+            <!-- dashboard section (sidebar on the left) -->
+            <div class="col-3 col-md-2 sidebar  seperator ms-3" >
+                <div class="row text-color my-5">
+                    <div class="col-md-12 my-2 style="cursor:pointer;>
+                        <a class="  {% if request.path == '/adminDashboard/' %}active{% endif %}"
+                        href="{% url 'adminDashboard' %}">Dashboard</a>
+                    </div>
+                    <div class="col-md-12 my-2" style="cursor:pointer;">
+                        <a class="  add-admin {% if request.path == '/addAdmin/' %}active{% endif %}"
+                            href="{% url 'addAdmin' %}">Add Admin</a>
+                    </div>
+                    <div class="col-md-12 my-2" style="cursor:pointer;">
+                        <a class="my-5">Analytics</a>
+                    </div>
+                    <div class="col-md-12 my-2" style="cursor:pointer;">
+                        <a class="my-5">Log out</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8 col-md-9">
+                {% block content %}
+                <!-- Content for each page goes here -->
+                {% endblock %}
+            </div>
+        </div>
+       
+    </div>
+</body>
+
+</html>

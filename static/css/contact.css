@@ -28,18 +28,18 @@
 }
 
 
-#exampleInputEmail1 {
+#exampleFormControlTextarea1,#exampleInputEmail1 {
     background-color: rgba(255, 0, 0, 0) !important;
     border: 1px solid black !important; /* Solid black border */
     box-shadow: none !important; /* Remove the default Bootstrap shadow */
-    width: 70% !important;
+    
   }
 
-  #exampleInputPassword1 {
+  #exampleFormControlTextarea1,#exampleInputEmail1 {
     background-color: rgba(255, 0, 0, 0) !important;
     border: 1px solid black !important; /* Solid black border */
     box-shadow: none !important;
-    width: 70% !important;
+   
   }
 
   .btn-primary {

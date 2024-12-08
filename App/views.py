@@ -35,6 +35,9 @@ def admin(request):
 def adminDashboard(request):
     return render(request, 'App/AdminDashboard.html')
 
+def addAdmin(request):
+    return render (request,"App/AddAdmin.html")
+
 
 # YOUTUBE API INTEGRATION IN ANALYSIS.HTML AND RESULTS.HTML
 
