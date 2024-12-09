@@ -29,13 +29,11 @@
 
 
             <div class="edge">
-                <button class="chrome-btn">
-                    <!-- <img src="https://img.icons8.com/?size=100&id=63785&format=png&color=000000" alt="Google" width="40"
-                        height="40">  -->
+                <button class="chrome-btn {% if request.path == '/analysis/' %}active{% endif %}"
+                onclick="window.location.href=`{% url 'analysis' %}`" >
+                    
                     Start Exploring Now</button>
-                <!-- <button class=" edge-btn ms-4"> <img
-                        src="https://img.icons8.com/?size=100&id=dGm9KIZPpukc&format=png&color=000000" width="40"
-                        height="40" alt=""></button> -->
+                
             </div>
         </div>
     </div>
@@ -78,7 +76,8 @@
                         <h5>Travel Planning Made Easy</h5>
                     </div>
                     <p class="mx-5 m-2">Get instant summaries of travel vlogs and videos.</p>
-                    <button class="ms-5 my-3">Get Started</button>
+                    <button class="ms-5 my-3 {% if request.path == '/analysis/' %}active{% endif %}"
+                    onclick="window.location.href=`{% url 'analysis' %}`">Get Started</button>
                 </div>
             </div>
 
@@ -90,7 +89,8 @@
                     </div>
 
                     <p class="mx-5 m-2">Uncover hidden gems and tips from travel videos.</p>
-                    <button class="ms-5 my-3">Get Started</button>
+                    <button class="ms-5 my-3 {% if request.path == '/analysis/' %}active{% endif %}"
+                    onclick="window.location.href=`{% url 'analysis' %}`">Get Started</button>
                 </div>
             </div>
             <div class="col-md-6">
@@ -100,7 +100,8 @@
                         <h5>Content Creation boost</h5>
                     </div>
                     <p class="mx-5 m-2">Supercharge your travel blog with AI.</p>
-                    <button class="ms-5 my-3">Get Started</button>
+                    <button class="ms-5 my-3 {% if request.path == '/analysis/' %}active{% endif %}"
+                    onclick="window.location.href=`{% url 'analysis' %}`">Get Started</button>
                 </div>
             </div>
             <div class="col-md-6">
@@ -110,7 +111,8 @@
                         <h5>Accessible Travel Information</h5>
                     </div>
                     <p class="mx-5 m-2">Travelers with limited time get quic video summaries.</p>
-                    <button class="ms-5 my-3">Get Started</button>
+                    <button class="ms-5 my-3 {% if request.path == '/analysis/' %}active{% endif %}"
+                    onclick="window.location.href=`{% url 'analysis' %}`">Get Started</button>
                 </div>
             </div>
         </div>
@@ -231,13 +233,11 @@
         <h2 class="hdng">Unlock Travel Insights Today! </h2>
         <!-- <p> Your Copilot to Save your time and get 99% of insights</p> -->
         <div class="edge my-5">
-            <button class="chrome-btn">
-                <!-- <img src="https://img.icons8.com/?size=100&id=63785&format=png&color=000000" alt="Google" width="40"
-                    height="40"> -->
+            <button class="chrome-btn {% if request.path == '/analysis/' %}active{% endif %}"
+            onclick="window.location.href=`{% url 'analysis' %}`">
+                
                 Start Exploring Now</button>
-            <!-- <button class=" edge-btn ms-4"> <img
-                    src="https://img.icons8.com/?size=100&id=dGm9KIZPpukc&format=png&color=000000" width="40"
-                    height="40" alt=""></button> -->
+            
         </div>
     </div>
 

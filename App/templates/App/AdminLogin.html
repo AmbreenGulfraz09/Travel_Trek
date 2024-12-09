@@ -45,9 +45,9 @@
                         <label for="exampleInputPassword1" class="form-label">Password</label>
                         <input type="password" class="form-control" id="exampleInputPassword1">
                       </div>
-                    <div class="mb-3 form-check" style=" display:flex; justify-content: flex-end; width: 70%;">
+                    <!-- <div class="mb-3 form-check" style=" display:flex; justify-content: flex-end; width: 70%;">
                         <a href="">Forgot Password?</a>
-                    </div>
+                    </div> -->
                     <button type="submit" class="btn btn-primary  {% if request.path == '/adminDashboard/' %}active{% endif %}" 
                     onclick="window.location.href=`{% url 'adminDashboard' %}`">
                     Login</button>
