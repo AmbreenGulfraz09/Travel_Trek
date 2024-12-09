@@ -59,6 +59,16 @@
             text-decoration: none;
             /* Ensures no underline on hover */
         }
+        .btn{
+    background-color: #F01111 !important;
+    border: 1px solid white;
+    
+    
+}
+.btn:hover{
+    background-color: rgba(255, 0, 0, 0.7) !important;
+    transition: background-color 0.5s ease;
+}
 
         /* adjusting buttons colors  */
 
@@ -104,6 +114,19 @@
 </head>
 
 <body>
+    <div class="container-fluid" style="background-color: #F01111;">
+        <div class="row">
+            <div class="col-6 col-md-6 my-2">
+             
+                    <img src="{% static '/images/logo.ico' %}" alt="Logo" width="55" height="55" class="logo">
+               
+            </div>
+            <div class="col-6 col-md-6 d-flex justify-content-end">
+                <button class=" btn my-3 ">Logout</button>
+            </div>
+        </div>
+    </div>
+    </div>
     <div class="container-fluid ">
         <div class="row " >
             <!-- dashboard section (sidebar on the left) -->
@@ -120,9 +143,7 @@
                     <div class="col-md-12 my-2" style="cursor:pointer;">
                         <a class="my-5">Analytics</a>
                     </div>
-                    <div class="col-md-12 my-2" style="cursor:pointer;">
-                        <a class="my-5">Log out</a>
-                    </div>
+                  
                 </div>
             </div>
             <div class="col-8 col-md-9">
