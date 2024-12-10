@@ -1,11 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from googleapiclient.discovery import build
-import os
-from dotenv import load_dotenv, dotenv_values
-
-load_dotenv()
-key = os.getenv("YoutubeAPI_KEY")
+from .videos import fetch_and_transcribe_youtube_videos
+from .models import Transcript
 
 
 def home(request):
@@ -35,46 +32,28 @@ def admin(request):
 def adminDashboard(request):
     return render(request, 'App/AdminDashboard.html')
 
+
 def addAdmin(request):
-    return render (request,"App/AddAdmin.html")
-
-
-# YOUTUBE API INTEGRATION IN ANALYSIS.HTML AND RESULTS.HTML
-
-def fetch_top_youtube_videos(query):
-    try:
-        youtube = build('youtube', 'v3', developerKey=key)
-        response = youtube.search().list(
-            q=query,
-            part='snippet',
-            maxResults=5,
-            type='video',
-            relevanceLanguage='en',
-            order='relevance',
-            regionCode='US',
-            videoCaption='closedCaption'
-        ).execute()
-
-        videos = [
-            {
-                'title': item['snippet']['title'],
-                'url': f"https://www.youtube.com/watch?v={item['id']['videoId']}",
-                'thumbnail': item['snippet']['thumbnails']['default']['url'],
-                'description': item['snippet']['description'],
-            }
-            for item in response.get('items', [])
-        ]
-        return videos
-
-    except Exception as e:
-        print(f"Error fetching YouTube videos: {e}")
-        return []
+    return render(request, "App/AddAdmin.html")
 
 
 def search_videos(request):
-    """Handles the search query and renders results on the results.html page."""
+    """Search for videos, transcribe them, and save to the database."""
     if request.method == 'POST':
         query = request.POST.get('query')
-        videos = fetch_top_youtube_videos(query)
-        return render(request, 'App/Result.html', {'videos': videos})
+        video_data = fetch_and_transcribe_youtube_videos(query)
+
+        for video in video_data:
+            # Save transcription to the database
+            Transcript.objects.update_or_create(
+                video_id=video['video_id'],
+                defaults={
+                    'video_title': video['title'],
+                    'video_url': video['url'],
+                    'transcript_text': video['transcript'],
+                }
+            )
+
+        return render(request, 'App/Result.html', {'videos': video_data})
+
     return render(request, 'App/Analysis.html')
