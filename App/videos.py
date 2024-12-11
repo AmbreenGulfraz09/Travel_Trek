@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 load_dotenv()
 key = os.getenv("YoutubeAPI_KEY")
 
-
 def fetch_and_transcribe_youtube_videos(query):
     """
     Fetch YouTube videos based on a search query and transcribe them.
@@ -34,26 +33,29 @@ def fetch_and_transcribe_youtube_videos(query):
             video_title = item['snippet']['title']
             video_url = f"https://www.youtube.com/watch?v={video_id}"
             video_thumbnail = item['snippet']['thumbnails']['default']['url']
-            description = item['snippet']['description'],
+            video_description = item['snippet']['description']
 
-            # Use LangChain YouTube Loader to transcribe video
-            try:
-                loader = YoutubeLoader.from_youtube_url(
-                    video_url, language=['en'], translation='en'
-                )
-                docs = loader.load()
-                transcript = " ".join([doc.page_content for doc in docs])
-                print("Transcription done")
-            except Exception as e:
-                transcript = None  # Handle errors in transcription
-
+            # Append video details without waiting for transcription
             videos.append({
                 'video_id': video_id,
                 'title': video_title,
                 'url': video_url,
-                'thumbnail': video_thumbnail,  # Add thumbnail to the dictionary
-                'transcript': transcript
+                'thumbnail': video_thumbnail,
+                'description': video_description,
+                'transcript': None  # Placeholder for now
             })
+
+        # Fetch and update transcripts asynchronously
+        for video in videos:
+            try:
+                loader = YoutubeLoader.from_youtube_url(
+                    video['url'], language=['en'], translation='en'
+                )
+                docs = loader.load()
+                video['transcript'] = " ".join([doc.page_content for doc in docs])
+                print(f"Transcription done for video: {video['title']}")
+            except Exception as e:
+                video['transcript'] = None  # Handle transcription errors
 
         return videos
 
