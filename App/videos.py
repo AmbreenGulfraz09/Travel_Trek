@@ -6,10 +6,11 @@ from dotenv import load_dotenv
 load_dotenv()
 key = os.getenv("YoutubeAPI_KEY")
 
-def fetch_and_transcribe_youtube_videos(query):
+
+def fetch_youtube_videos(query):
     """
-    Fetch YouTube videos based on a search query and transcribe them.
-    Returns a list of dictionaries containing video details and transcriptions.
+    Fetch YouTube videos based on a search query.
+    Returns a list of dictionaries containing video details.
     """
     try:
         # Initialize YouTube API client
@@ -35,27 +36,15 @@ def fetch_and_transcribe_youtube_videos(query):
             video_thumbnail = item['snippet']['thumbnails']['default']['url']
             video_description = item['snippet']['description']
 
-            # Append video details without waiting for transcription
+            # Add video details without waiting for transcription
             videos.append({
                 'video_id': video_id,
                 'title': video_title,
                 'url': video_url,
                 'thumbnail': video_thumbnail,
                 'description': video_description,
-                'transcript': None  # Placeholder for now
+                'transcript': None  # Placeholder for transcription
             })
-
-        # Fetch and update transcripts asynchronously
-        for video in videos:
-            try:
-                loader = YoutubeLoader.from_youtube_url(
-                    video['url'], language=['en'], translation='en'
-                )
-                docs = loader.load()
-                video['transcript'] = " ".join([doc.page_content for doc in docs])
-                print(f"Transcription done for video: {video['title']}")
-            except Exception as e:
-                video['transcript'] = None  # Handle transcription errors
 
         return videos
 

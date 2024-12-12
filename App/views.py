@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from googleapiclient.discovery import build
-from .videos import fetch_and_transcribe_youtube_videos
+from .videos import fetch_youtube_videos
 from django.utils.timezone import now
 from .models import Transcript, SearchQuery
+from threading import Thread
+from .tasks import transcribe_video_task
 
 
 def home(request):
@@ -39,27 +41,28 @@ def addAdmin(request):
 
 
 def search_videos(request):
-    """Search for videos, transcribe them, and save to the database."""
     if request.method == 'POST':
         query = request.POST.get('query')
-
-        # Save search query in the database
         search_query = SearchQuery.objects.create(query_text=query)
-
-        video_data = fetch_and_transcribe_youtube_videos(query)
+        video_data = fetch_youtube_videos(query)
 
         for video in video_data:
-            # Save transcription linked to the search query
-            Transcript.objects.update_or_create(
+            # Save video details to the database
+            transcript_obj, created = Transcript.objects.update_or_create(
                 video_id=video['video_id'],
                 defaults={
                     'search_query': search_query,
                     'video_title': video['title'],
                     'video_url': video['url'],
-                    'transcript_text': video['transcript'],
+                    'transcript_text': None,  # Transcription will be added later
                 }
             )
 
-        return render(request, 'App/Result.html', {'videos': video_data, 'query': search_query.query_text})
+            # Start transcription in a new thread
+            thread = Thread(target=transcribe_video_task,
+                            args=(video['video_id'], video['url']))
+            thread.start()
+
+        return render(request, 'App/Result.html', {'videos': video_data})
 
     return render(request, 'App/Analysis.html')
