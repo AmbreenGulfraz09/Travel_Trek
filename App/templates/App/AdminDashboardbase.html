@@ -12,7 +12,7 @@
     <title>Document</title>
     <style>
         /* Ensuring the sidebar stays sticky */
-       
+
         .sidebar {
             position: sticky;
             height: 100vh;
@@ -30,8 +30,8 @@
             margin-right: 15px;
             /* Optional: Add space between the sidebar and the content */
         }
-        
-       
+
+
         .btn {
             background-color: #F01111 !important;
             color: white;
@@ -59,16 +59,34 @@
             text-decoration: none;
             /* Ensures no underline on hover */
         }
-        .btn{
-    background-color: #F01111 !important;
-    border: 1px solid white;
-    
-    
-}
-.btn:hover{
-    background-color: rgba(255, 0, 0, 0.7) !important;
-    transition: background-color 0.5s ease;
-}
+
+        .btn {
+            background-color: #F01111 !important;
+            border: 1px solid white;
+
+
+        }
+
+        .btn:hover {
+            background-color: rgba(255, 0, 0, 0.7) !important;
+            transition: background-color 0.5s ease;
+        }
+
+        .active {
+            border-left: 2px solid #F01111;
+            /* Red line for active state */
+            padding-left: 5px;
+        }
+
+        .active::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            /* Adjust height as needed */
+            background-color: #F01111;
+            /* Red line */
+            margin-right: 2px;
+        }
 
         /* adjusting buttons colors  */
 
@@ -99,7 +117,7 @@
                 /* Smaller heading */
             }
 
-            .row{
+            .row {
                 --bs-gutter-x: 0.5rem;
 
             }
@@ -117,9 +135,9 @@
     <div class="container-fluid" style="background-color: #F01111;">
         <div class="row">
             <div class="col-6 col-md-6 my-2">
-             
-                    <img src="{% static '/images/logo.ico' %}" alt="Logo" width="55" height="55" class="logo">
-               
+
+                <img src="{% static '/images/logo.ico' %}" alt="Logo" width="55" height="55" class="logo">
+
             </div>
             <div class="col-6 col-md-6 d-flex justify-content-end">
                 <button class=" btn my-3 ">Logout</button>
@@ -128,31 +146,55 @@
     </div>
     </div>
     <div class="container-fluid ">
-        <div class="row " >
+        <div class="row ">
             <!-- dashboard section (sidebar on the left) -->
-            <div class="col-3 col-md-2 sidebar  seperator ms-3" >
+            <div class="col-3 col-md-2 sidebar  seperator ms-3">
                 <div class="row text-color my-5">
-                    <div class="col-md-12 my-2 style="cursor:pointer;>
-                        <a class="  {% if request.path == '/adminDashboard/' %}active{% endif %}"
-                        href="{% url 'adminDashboard' %}">Dashboard</a>
+                    <div class="col-md-12 my-2 style=" cursor:pointer;>
+
+                        <a class="{% if request.path == '/adminDashboard/' %}active{% endif %}"
+                            href="{% url 'adminDashboard' %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                                fill="#F01111">
+                                <path
+                                    d="M520-600v-240h320v240H520ZM120-440v-400h320v400H120Zm400 320v-400h320v400H520Zm-400 0v-240h320v240H120Zm80-400h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z" />
+                            </svg>
+                            Dashboard
+                        </a>
+
+
                     </div>
                     <div class="col-md-12 my-2" style="cursor:pointer;">
+
                         <a class="  add-admin {% if request.path == '/addAdmin/' %}active{% endif %}"
-                            href="{% url 'addAdmin' %}">Add Admin</a>
+                            href="{% url 'addAdmin' %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#F01111">
+                            <path
+                                d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z" />
+                        </svg>
+                        Add Admin
+                        </a>
+                       
                     </div>
                     <div class="col-md-12 my-2" style="cursor:pointer;">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#F01111">
+                            <path
+                                d="M280-280h80v-200h-80v200Zm320 0h80v-400h-80v400Zm-160 0h80v-120h-80v120Zm0-200h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+                        </svg>
                         <a class="my-5">Analytics</a>
                     </div>
-                  
+
                 </div>
             </div>
-            <div class="col-8 col-md-9">
+            <div class="col-7 col-md-9">
                 {% block content %}
                 <!-- Content for each page goes here -->
                 {% endblock %}
             </div>
         </div>
-       
+
     </div>
 </body>
 
