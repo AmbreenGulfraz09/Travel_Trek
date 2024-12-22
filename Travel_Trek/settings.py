@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 
 from pathlib import Path
 
@@ -137,3 +140,6 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+VECTOR_STORE_PATH = os.path.join(BASE_DIR, 'vector_store', 'faiss_index')
