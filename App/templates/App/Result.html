@@ -92,20 +92,23 @@
 
 
                     <!-- search share etc section -->
-
-
-
-                    <!-- overview section -->
+                    <!-- Summary section -->
                     <div class="col-md-11 gx-5 gy-5">
-                        <div class="overview ">
+                        <div class="overview">
                             <h3>Summary</h3>
-                            <p style="font-size: smaller;" class="my-4">Lorem ipsum, dolor sit amet consectetur
-                                adipisicing elit. Expedita neque ex fuga provident iste
-                                mollitia. Obcaecati quibusdam consectetur sint aspernatur eos enim quaerat itaque?</p>
+                            <div id="combined-summary-container">
+                                {% if combined_summary %}
+                                    <p style="font-size: smaller;" class="my-4">{{ combined_summary }}</p>
+                                {% else %}
+                                    <p style="font-size: smaller;" class="my-4" id="loading-combined-summary">
+                                        Generating summary... Please wait...
+                                    </p>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
 
-                    <!-- summary section -->
+                    <!-- Guide section -->
                     <div class="row ">
                         <h3 class="mx-2">Guide</h3>
                         <p style="font-size: smaller;" class="my-3 mx-2">Lorem ipsum, dolor sit amet consectetur
@@ -160,17 +163,47 @@
                 </div>
 
             </div>
-
-
-
-
-
         </div>
 
     </div>
 
 
+<!-- Add this to pass search_query_id to JavaScript -->
+{{ search_query_id|json_script:"search-query-id" }}
 
+<script>
+function checkCombinedSummary() {
+    // Get search_query_id from the hidden element
+    const searchId = JSON.parse(document.getElementById('search-query-id').textContent);
+    
+    fetch(`/check-summaries/?search_id=${searchId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.combined_summary) {
+                const summaryContainer = document.getElementById('loading-combined-summary');
+                if (summaryContainer) {
+                    summaryContainer.textContent = data.combined_summary;
+                }
+            }
+            
+            if (!data.is_ready) {
+                setTimeout(checkCombinedSummary, 5000);
+            }
+        })
+        .catch(error => {
+            console.error('Error checking summary:', error);
+            setTimeout(checkCombinedSummary, 5000);
+        });
+}
+
+document.addEventListener('DOMContentLoaded', checkCombinedSummary);
+</script>
+    
 </body>
 
 </html>
