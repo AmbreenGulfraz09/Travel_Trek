@@ -46,30 +46,40 @@ def addAdmin(request):
 # Create a thread pool executor
 executor = ThreadPoolExecutor(max_workers=3)
 
-
 def search_videos(request):
     if request.method == 'POST':
         query = request.POST.get('query')
         try:
-            # Clear any old transcripts that might be stuck processing
-            Transcript.objects.filter(
-                transcript_text__isnull=True
-            ).delete()
-            
-            # Create search query record
-            search_query = SearchQuery.objects.create(query_text=query)
             video_data = fetch_youtube_videos(query)
+            
+            # Check for existing search
+            existing_search = SearchQuery.objects.filter(
+                query_text__iexact=query
+            ).first()
+
+            if existing_search:
+                if existing_search.combined_summary:
+                    # Return cached results with fresh video data
+                    return render(request, 'App/Result.html', {
+                        'videos': video_data,
+                        'combined_summary': existing_search.combined_summary,
+                        'search_query_id': existing_search.id
+                    })
+                else:
+                    # Delete existing incomplete record
+                    existing_search.delete()
+
+            # Process as new search
+            search_query = SearchQuery.objects.create(query_text=query)
             futures = []
 
             for video in video_data:
-                transcript_obj, created = Transcript.objects.update_or_create(
+                transcript_obj = Transcript.objects.create(
                     video_id=video['video_id'],
-                    search_query=search_query,  # Ensure this is set
-                    defaults={
-                        'video_title': video['title'],
-                        'video_url': video['url'],
-                        'transcript_text': None,
-                    }
+                    search_query=search_query,
+                    video_title=video['title'],
+                    video_url=video['url'],
+                    transcript_text=None
                 )
 
                 future = executor.submit(
@@ -83,10 +93,7 @@ def search_videos(request):
                 try:
                     while not all(future.done() for future in futures):
                         time.sleep(1)
-
-                    # Pass search_query_id to ensure we only process relevant transcripts
                     result = generate_and_store_summaries(search_query.id)
-                    print(f"Summary generation result: {result}")
                     if result['success']:
                         search_query.combined_summary = result['summary']
                         search_query.save()
