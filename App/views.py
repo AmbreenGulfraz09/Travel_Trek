@@ -9,7 +9,9 @@ from .tasks import transcribe_and_embed_video_task
 from concurrent.futures import ThreadPoolExecutor
 from .generations import generate_and_store_summaries
 import time
+from django.db import transaction
 
+from django.core.exceptions import ObjectDoesNotExist
 
 def home(request):
     return render(request, 'App/home.html')
@@ -50,45 +52,48 @@ def search_videos(request):
     if request.method == 'POST':
         query = request.POST.get('query')
         try:
+            # Fetch videos from YouTube
             video_data = fetch_youtube_videos(query)
-            
-            # Check for existing search
-            existing_search = SearchQuery.objects.filter(
-                query_text__iexact=query
-            ).first()
 
+            # Check for existing search
+            existing_search = SearchQuery.objects.filter(query_text__iexact=query).first()
             if existing_search:
                 if existing_search.combined_summary:
-                    # Return cached results with fresh video data
+                    # Return cached results
                     return render(request, 'App/Result.html', {
                         'videos': video_data,
                         'combined_summary': existing_search.combined_summary,
                         'search_query_id': existing_search.id
                     })
                 else:
-                    # Delete existing incomplete record
-                    existing_search.delete()
+                    # Delete existing incomplete records
+                    with transaction.atomic():
+                        Transcript.objects.filter(search_query=existing_search).delete()
+                        existing_search.delete()
 
             # Process as new search
             search_query = SearchQuery.objects.create(query_text=query)
             futures = []
 
             for video in video_data:
-                transcript_obj = Transcript.objects.create(
-                    video_id=video['video_id'],
-                    search_query=search_query,
-                    video_title=video['title'],
-                    video_url=video['url'],
-                    transcript_text=None
-                )
+                # Avoid duplicate entries
+                if not Transcript.objects.filter(video_id=video['video_id']).exists():
+                    Transcript.objects.create(
+                        video_id=video['video_id'],
+                        search_query=search_query,
+                        video_title=video['title'],
+                        video_url=video['url'],
+                        transcript_text=None
+                    )
+                    # Submit video for processing
+                    future = executor.submit(
+                        process_video_safely,
+                        video['video_id'],
+                        video['url']
+                    )
+                    futures.append(future)
 
-                future = executor.submit(
-                    process_video_safely,
-                    video['video_id'],
-                    video['url']
-                )
-                futures.append(future)
-
+            # Function to generate summaries
             def generate_summaries_when_ready():
                 try:
                     while not all(future.done() for future in futures):
@@ -107,7 +112,6 @@ def search_videos(request):
                 'combined_summary': None,
                 'search_query_id': search_query.id
             })
-
         except Exception as e:
             print(f"Error in search_videos: {str(e)}")
             return render(request, 'App/Result.html', {
@@ -115,6 +119,7 @@ def search_videos(request):
             })
 
     return render(request, 'App/Analysis.html')
+
 
 def process_video_safely(video_id: str, video_url: str) -> None:
     """
@@ -128,18 +133,38 @@ def process_video_safely(video_id: str, video_url: str) -> None:
         print(f"Error processing video {video_id}: {str(e)}")
 
 
+
 def check_summaries_status(request):
     """
     API endpoint to check if combined summary is ready
     """
     try:
+        # Get 'search_id' from the request
         search_id = request.GET.get('search_id')
+
+        # Validate 'search_id'
+        if not search_id:
+            return JsonResponse({'error': "Missing 'search_id' in the request."}, status=400)
+
+        # Attempt to retrieve the SearchQuery record
         search_query = SearchQuery.objects.get(id=search_id)
 
+        # Respond with the summary status
         return JsonResponse({
             'combined_summary': search_query.combined_summary,
             'is_ready': bool(search_query.combined_summary)
         })
+
+    except ValueError:
+        # Handle invalid search_id (non-numeric or malformed)
+        return JsonResponse({'error': "'search_id' must be a valid number."}, status=400)
+
+    except ObjectDoesNotExist:
+        # Handle non-existent SearchQuery record
+        return JsonResponse({'error': "No search found for the given 'search_id'."}, status=404)
+
     except Exception as e:
+        # Catch-all for other unexpected errors
         print(f"Error in check_summaries_status: {str(e)}")
-        return JsonResponse({'error': str(e)}, status=500)
+        return JsonResponse({'error': 'An unexpected error occurred.'}, status=500)
+
