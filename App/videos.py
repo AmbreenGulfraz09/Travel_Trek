@@ -56,7 +56,7 @@ def fetch_youtube_videos(query):
 
         # Search for videos using refined query
         response = youtube_client.search().list(
-            q=refined_query,
+            q=query,
             part='snippet',
             maxResults=5,
             type='video',

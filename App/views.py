@@ -10,7 +10,6 @@ from concurrent.futures import ThreadPoolExecutor
 from .generations import generate_and_store_summaries
 import time
 from django.db import transaction
-
 from django.core.exceptions import ObjectDoesNotExist
 
 def home(request):
