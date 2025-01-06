@@ -12,6 +12,7 @@ import time
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 
+
 def home(request):
     return render(request, 'App/home.html')
 
@@ -26,6 +27,10 @@ def contact(request):
 
 def analysis(request):
     return render(request, 'App/Analysis.html')
+
+
+def tutorial(request):
+    return render(request, 'App/tutorial.html')
 
 
 def result(request):
@@ -47,6 +52,7 @@ def addAdmin(request):
 # Create a thread pool executor
 executor = ThreadPoolExecutor(max_workers=3)
 
+
 def search_videos(request):
     if request.method == 'POST':
         query = request.POST.get('query')
@@ -55,7 +61,8 @@ def search_videos(request):
             video_data = fetch_youtube_videos(query)
 
             # Check for existing search
-            existing_search = SearchQuery.objects.filter(query_text__iexact=query).first()
+            existing_search = SearchQuery.objects.filter(
+                query_text__iexact=query).first()
             if existing_search:
                 if existing_search.combined_summary:
                     # Return cached results
@@ -67,7 +74,8 @@ def search_videos(request):
                 else:
                     # Delete existing incomplete records
                     with transaction.atomic():
-                        Transcript.objects.filter(search_query=existing_search).delete()
+                        Transcript.objects.filter(
+                            search_query=existing_search).delete()
                         existing_search.delete()
 
             # Process as new search
@@ -132,7 +140,6 @@ def process_video_safely(video_id: str, video_url: str) -> None:
         print(f"Error processing video {video_id}: {str(e)}")
 
 
-
 def check_summaries_status(request):
     """
     API endpoint to check if combined summary is ready
@@ -166,4 +173,3 @@ def check_summaries_status(request):
         # Catch-all for other unexpected errors
         print(f"Error in check_summaries_status: {str(e)}")
         return JsonResponse({'error': 'An unexpected error occurred.'}, status=500)
-
