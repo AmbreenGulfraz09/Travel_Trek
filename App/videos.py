@@ -18,7 +18,7 @@ def clean_and_refine_query(query):
     try:
         # Step 1: Preprocess the query
         query = query.lower()  # Convert to lowercase
-        query = re.sub(r"[^\w\s]", "", query)  # Remove punctuation
+        query = re.sub(r"[^\w\s]", "", query)  # Remove white spaces, alphanumerics, punctuations
         
         # Step 2: Parse the query with spaCy for POS tagging
         doc = nlp(query)
@@ -26,14 +26,14 @@ def clean_and_refine_query(query):
         # Step 3: Keep only important words (nouns, verbs, adjectives)
         important_words = [
             token.text for token in doc 
-            if token.pos_ in {"NOUN", "VERB", "ADJ", "PROPN"} and not token.is_stop
-        ]
+            if token.pos_ in {"NOUN", "VERB", "ADJ", "PROPN"} and not token.is_stop  # token is not stop word
+        ]   #token.pos_, checks the current token is part of speech or not
         
         # Combine refined words into a simplified query
         refined_query = " ".join(important_words)
         
         # If no refined words, fallback to original query
-        if not refined_query.strip():
+        if not refined_query.strip(): # remove white spaces
             refined_query = query.strip()
         
         return refined_query
@@ -49,7 +49,7 @@ def fetch_youtube_videos(query):
     try:
         # Refine the query
         refined_query = clean_and_refine_query(query)
-        print(f"Refined Query: {refined_query}")  # Debugging purposes
+        print(f"Refined Query: {refined_query}")  
 
         # Initialize YouTube API client
         youtube_client = build('youtube', 'v3', developerKey=key)
@@ -57,7 +57,7 @@ def fetch_youtube_videos(query):
         # Search for videos using refined query
         response = youtube_client.search().list(
             q=query,
-            part='snippet',
+            part='snippet',     # this parameter to get all video properties in response.
             maxResults=5,
             type='video',
             relevanceLanguage='en',
