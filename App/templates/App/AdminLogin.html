@@ -11,6 +11,7 @@
 
 <head>
     <meta charset="UTF-8">
+    
     <link rel="stylesheet" type="text/css" href="{% static 'css/AdminLogin.css' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
@@ -32,31 +33,37 @@
             <div class=" col-md-6 my-5" style="justify-content: center; align-items: center;">
 
                 <!-- <form class="mx-5 my-5"> -->
-                    <h1 style="color: #f01010;">Login</h1>
+                <h1 style="color: #f01010;">Login</h1>
 
 
-                    <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
-                        <div id="emailError" style="color:red; display:none;">Please enter a valid email address.</div>
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                        required>
+                    <div id="emailError" style="color:red; display:none;">Please enter a valid email address.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                    
+                    <div id="passwordError" style="color:red; display:none;">Password must be at least 8 characters
+                        long.</div>
+                    <div id="passwordchar" style="color:red; display:none;">Password must contain numbers and characters
                     </div>
+                    <div id="emptypassword" style="color:red; display:none;">Password cannot be empty.</div>
                     
-                    <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" required>
-                        <div id="passwordError" style="color:red; display:none;">Password must be at least 8 characters long.</div>
-                        <div id="passwordchar" style="color:red; display:none;">Password must contain numbers and characters</div>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary" id="loginBtn">
-                        Login
-                    </button>
-                    
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    Login
+                </button>
+
+            </div>
         </div>
-    </div>
-<script src="/static/js/adminLogin.js"></script>
-</body>         
-    
+        <script src="/static/js/adminLogin.js"></script>
+</body>
+
 
 </html>
 {% endblock %}

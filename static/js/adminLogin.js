@@ -15,15 +15,26 @@ document.getElementById('loginBtn').addEventListener('click', function(event) {
     // Password validation
     var passwordError = document.getElementById('passwordError');
     var passwordchar=document.getElementById('passwordchar');
-    if (!password || password.length < 8 ) {
+    var emptypassword=document.getElementById('emptypassword');
+    if(!password){
+        emptypassword.style.display = 'none';
+        passwordchar.style.display = 'block';
+        event.preventDefault();
+    }
+    else if ( password.length < 8 ) {
         passwordError.style.display = 'block';
-        event.preventDefault(); // Prevent form submission
+        passwordchar.style.display = 'none';
+        event.preventDefault();
     } else if(!validatePassword(password)){
         passwordchar.style.display = 'block';
         passwordError.style.display = 'none';
+        event.preventDefault();
     }
+    
     else {
         passwordError.style.display = 'none';
+        passwordchar.style.display = 'none';
+       
     }
 });
 
@@ -38,5 +49,6 @@ function validateEmail(email) {
 // Password validation function (contains letters and numbers, and is at least 8 characters long)
 function validatePassword(password) {
     var re = /^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    // return re.test(password);
     return re.test(password);
 }
