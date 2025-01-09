@@ -49,15 +49,20 @@
                     
                     <div id="passwordError" style="color:red; display:none;">Password must be at least 8 characters
                         long.</div>
-                    <div id="passwordchar" style="color:red; display:none;">Password must contain numbers and characters
+                    <div id="passwordchar" style="color:red; display:none;">Password must contain Alphabets,numbers and characters
                     </div>
                     <div id="emptypassword" style="color:red; display:none;">Password cannot be empty.</div>
                     
                 </div>
-
-                <button type="submit" class="btn btn-primary" id="loginBtn">
-                    Login
-                </button>
+                <button 
+                class="btn btn-primary" 
+                id="loginBtn" 
+                data-url="{% url 'adminDashboard' %}"> 
+              
+                Login
+            </button>
+            
+            
 
             </div>
         </div>
