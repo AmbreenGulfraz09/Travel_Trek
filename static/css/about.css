@@ -40,8 +40,8 @@
 
 }
 
-.pic1 {
-    background-image: url("/static/images/a9da52b0856abc9aaac719b8f76466ca.jpg");
+.pic2 {
+    background-image: url("/static/images/amb.jpeg");
     width: 60%;
     height: 120px;
     border-radius: 50%;
@@ -51,7 +51,50 @@
 
 
 }
+.pic3 {
+    background-image: url("/static/images/sir_shariq.jpeg");
+    width: 60%;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center center;
 
+
+}
+.pic4 {
+    background-image: url("/static/images/sir_umer.jpeg");
+    width: 60%;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center center;
+
+
+}
+.pic1 {
+    background-image: url("/static/images/taimoor.jpeg");
+    width: 60%;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center center;
+
+
+}
+.pic5 {
+    background-image: url("/static/images/rabia.jpeg");
+    width: 60%;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center center;
+
+
+}
 .insider>p {
     text-align: justify !important;
 }
