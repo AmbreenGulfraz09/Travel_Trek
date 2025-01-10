@@ -1,54 +1,66 @@
-document.getElementById('loginBtn').addEventListener('click', function(event) {
+document.getElementById('loginBtn').addEventListener('click', function (event) {
     // Get email and password values
-    var email = document.getElementById('exampleInputEmail1').value;
-    var password = document.getElementById('exampleInputPassword1').value;
+    const email = document.getElementById('exampleInputEmail1').value;
+    const password = document.getElementById('exampleInputPassword1').value;
+
+    // Get error elements
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const passwordchar = document.getElementById('passwordchar');
+    const emptypassword = document.getElementById('emptypassword');
+
+    // Validation flag
+    let isValid = true;
 
     // Email validation
-    var emailError = document.getElementById('emailError');
     if (!email || !validateEmail(email)) {
         emailError.style.display = 'block';
-        event.preventDefault(); // Prevent form submission
+        isValid = false;
     } else {
         emailError.style.display = 'none';
     }
 
     // Password validation
-    var passwordError = document.getElementById('passwordError');
-    var passwordchar=document.getElementById('passwordchar');
-    var emptypassword=document.getElementById('emptypassword');
-    if(!password){
-        emptypassword.style.display = 'none';
-        passwordchar.style.display = 'block';
-        event.preventDefault();
-    }
-    else if ( password.length < 8 ) {
+    if (!password) {
+        emptypassword.style.display = 'block';
+        passwordchar.style.display = 'none';
+        passwordError.style.display = 'none';
+        isValid = false;
+    } else if (password.length < 8) {
         passwordError.style.display = 'block';
         passwordchar.style.display = 'none';
-        event.preventDefault();
-    } else if(!validatePassword(password)){
+        emptypassword.style.display = 'none';
+        isValid = false;
+    } else if (!validatePassword(password)) {
         passwordchar.style.display = 'block';
         passwordError.style.display = 'none';
-        event.preventDefault();
-    }
-    
-    else {
+        emptypassword.style.display = 'none';
+        isValid = false;
+    } else {
+        emptypassword.style.display = 'none';
         passwordError.style.display = 'none';
         passwordchar.style.display = 'none';
-       
+    }
+
+    // Redirect or form submission if validation succeeds
+    if (isValid) {
+        const adminDashboardUrl = document.getElementById('loginBtn').dataset.url;
+        window.location.href = adminDashboardUrl;
+    } else {
+        event.preventDefault();
+    }
+
+    // Email validation function
+    function validateEmail(email) {
+        // Regex to only allow lowercase letters, digits, and special characters
+        const re = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+        return re.test(email); // No need to convert to lowercase
+    }
+    
+
+    // Password validation function
+    function validatePassword(password) {
+        const re = /^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        return re.test(password);
     }
 });
-
-// Simple email validation function
-function validateEmail(email) {
-    // Regex to only allow lowercase letters, digits, and special characters in the email
-    var re = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
-    return( re.test(String(email)));
-}
-
-
-// Password validation function (contains letters and numbers, and is at least 8 characters long)
-function validatePassword(password) {
-    var re = /^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    // return re.test(password);
-    return re.test(password);
-}
