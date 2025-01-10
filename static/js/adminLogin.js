@@ -52,9 +52,11 @@ document.getElementById('loginBtn').addEventListener('click', function (event) {
 
     // Email validation function
     function validateEmail(email) {
+        // Regex to only allow lowercase letters, digits, and special characters
         const re = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
-        return re.test(String(email).toLowerCase());
+        return re.test(email); // No need to convert to lowercase
     }
+    
 
     // Password validation function
     function validatePassword(password) {
