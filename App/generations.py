@@ -9,7 +9,6 @@ from .tasks import load_vector_store
 from .models import Transcript
 from dotenv import load_dotenv
 from .videos import clean_and_refine_query
-
 import traceback
 
 # Load environment variables

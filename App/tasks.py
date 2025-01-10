@@ -26,11 +26,11 @@ def load_vector_store() -> Optional[FAISS]:
     """
     if os.path.exists(settings.VECTOR_STORE_PATH):
         print(f"Loading FAISS vector store from: {settings.VECTOR_STORE_PATH}")
-        # Added allow_dangerous_deserialization=True since we're working with our own files
+        # Added allow_dangerous_deserialization=True, since we're working with our own files
         return FAISS.load_local(
             settings.VECTOR_STORE_PATH,
             embeddings,
-            allow_dangerous_deserialization=True  # Added this line
+            allow_dangerous_deserialization=True  
         )
     return None
 
@@ -42,7 +42,7 @@ def save_vector_store(store: FAISS) -> None:
     print(f"Saving FAISS vector store to: {settings.VECTOR_STORE_PATH}")
     store.save_local(settings.VECTOR_STORE_PATH)
 
-
+# TRANSCRIPTION FUNCTION
 def transcribe_and_embed_video_task(video_id: str, video_url: str) -> None:
     """
     Transcribe a YouTube video and store its embeddings in FAISS.

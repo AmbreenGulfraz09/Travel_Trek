@@ -133,7 +133,7 @@ def process_video_safely(video_id: str, video_url: str) -> None:
     Wrapper function to safely process videos in threads.
     """
     try:
-        print(f"Processing video {video_id}")  # Debugging log
+        print(f"Processing video {video_id}") 
         transcribe_and_embed_video_task(video_id, video_url)
         print(f"Processing completed for video {video_id}")
     except Exception as e:
