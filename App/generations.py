@@ -1,7 +1,7 @@
 import os
 from typing import Dict
 from langchain_community.vectorstores.faiss import FAISS
-from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from django.conf import settings
@@ -13,35 +13,32 @@ import traceback
 
 # Load environment variables
 load_dotenv()
-key = os.getenv("huggingFaceKey")
+gemini_key = os.getenv("GeminiAPIkey")
 
-# Initialize the LLM
-llm = HuggingFaceEndpoint(
-    repo_id="HuggingFaceH4/zephyr-7b-beta",
-    task="text-generation",  
-    max_new_tokens=4096,
-    streaming=True,
-    do_sample=False,
-    repetition_penalty=1.03,
-    huggingfacehub_api_token=key,
+# Initialize the LLM directly using ChatGoogleGenerativeAI
+llm = ChatGoogleGenerativeAI(
+    model="models/gemini-1.5-flash",
+    google_api_key=gemini_key,
+    max_tokens=None,
+    stream=True,
+    temperature=0,
+    max_retries=2,
 )
-
-chat_model = ChatHuggingFace(llm=llm)
 
 CHUNK_SUMMARY_PROMPT = """
 User Query: "{query}"
 
-Given the following video transcript, extract and summarize only the key points directly relevant to the query. Focus on addressing the main aspects of the query without adding any irrelevant details, background context, video titles or IDs, any video references, or mentions of video creators.
+Extract and summarize the key points from the following video transcript that are directly relevant to the query. Focus on the main aspects of the query without adding irrelevant details, background context, video titles, IDs, or references to video creators.
 
 Transcripts:
 {transcripts}
 
-Provide a short, concise summary (2–3 lines) highlighting only the main points related to the query. Ensure the summary is complete and ends with a clear, meaningful sentence:"""
+Provide a concise summary (2–3 lines) that directly addresses the query. Ensure the summary is complete and ends with a clear, meaningful sentence:"""
 
 FINAL_SUMMARY_PROMPT = """
 User Query: "{query}"
 
-The following are summaries extracted from various parts of the video transcripts. Using these, generate a single unified summary that directly addresses the query. Focus only on the key points related to the query, avoid any irrelevant details or repetition and  any irrelevant details, background context, video titles or IDs, any video references, or mentions of video creators., and ensure the summary is coherent and complete.
+The following are summaries extracted from various parts of the video transcripts. Combine these into a single, unified summary that directly addresses the query. Focus on the key points related to the query, avoid repetition, and ensure the summary is coherent and complete.
 
 Summaries:
 {summaries}
@@ -58,7 +55,7 @@ final_prompt_template = PromptTemplate(
     template=FINAL_SUMMARY_PROMPT
 )
 
-def chunk_transcripts(transcripts_queryset, max_chars=3000):
+def chunk_transcripts(transcripts_queryset, max_chars=10000):  # Increased max_chars
     """Break transcripts into smaller chunks to avoid token limits."""
     chunks = []
     current_chunk = []
@@ -100,23 +97,16 @@ def generate_and_store_summaries(search_query_id: int) -> Dict:
         refined_query = clean_and_refine_query(user_query)
 
         chunk_chain = LLMChain(
-            llm=chat_model,
-            prompt=PromptTemplate(
-                input_variables=["transcripts", "query"],
-                template=CHUNK_SUMMARY_PROMPT
-            ),
+            llm=llm,  # Using the directly initialized Gemini LLM
+            prompt=chunk_prompt_template,
             verbose=False
         )
 
         final_chain = LLMChain(
-            llm=chat_model,
-            prompt=PromptTemplate(
-                input_variables=["summaries", "query"],
-                template=FINAL_SUMMARY_PROMPT
-            ),
+            llm=llm,  # Using the directly initialized Gemini LLM
+            prompt=final_prompt_template,
             verbose=False
         )
-
 
         chunks = chunk_transcripts(transcripts)
         chunk_summaries = []
