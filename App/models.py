@@ -4,6 +4,7 @@ from django.db import models
 class SearchQuery(models.Model):
     query_text = models.CharField(max_length=255)
     combined_summary = models.TextField(null=True, blank=True)
+    guide_content = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True , null= True)
 
     def __str__(self):

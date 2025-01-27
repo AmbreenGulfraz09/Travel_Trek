@@ -90,8 +90,6 @@
                         </div>
                     </div>
 
-
-                    <!-- search share etc section -->
                     <!-- Summary section -->
                     <div class="col-md-11 gx-5 gy-5">
                         <div class="overview">
@@ -111,42 +109,17 @@
                     <!-- Guide section -->
                     <div class="row ">
                         <h3 class="mx-2">Guide</h3>
-                        <p style="font-size: smaller;" class="my-3 mx-2">Lorem ipsum, dolor sit amet consectetur
-                            adipisicing elit. Nisi, neque.</p>
+                        <p style="font-size: smaller;" class="my-3 mx-2">Here is detailed Guide you need, feel free to ask any question.</p>
                     </div>
 
-                    <div class=" summary-text row  mx-5" style="width: 80%;">
-                        <p class="text-color">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odio, nobis nulla. Laborum hic
-                            sunt architecto voluptatem quidem rerum quibusdam, aut similique assumenda harum deserunt
-                            ullam dignissimos atque consequuntur deleniti nemo fugit autem.
-                        </p>
-                        <p class="text-color">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odio, nobis nulla. Laborum hic
-                            sunt architecto voluptatem quidem rerum quibusdam, aut similique assumenda harum deserunt
-                            ullam dignissimos atque consequuntur deleniti nemo fugit autem.
-                        </p>
-                        <p class="text-color">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odio, nobis nulla. Laborum hic
-                            sunt architecto voluptatem quidem rerum quibusdam, aut similique assumenda harum deserunt
-                            ullam dignissimos atque consequuntur deleniti nemo fugit autem.
-                        </p>
-                        <p class="text-color">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odio, nobis nulla. Laborum hic
-                            sunt architecto voluptatem quidem rerum quibusdam, aut similique assumenda harum deserunt
-                            ullam dignissimos atque consequuntur deleniti nemo fugit autem.
-                        </p>
-                        <p class="text-color">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odio, nobis nulla. Laborum hic
-                            sunt architecto voluptatem quidem rerum quibusdam, aut similique assumenda harum deserunt
-                            ullam dignissimos atque consequuntur deleniti nemo fugit autem.
-                        </p>
-                        <p class="text-color">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odio, nobis nulla. Laborum hic
-                            sunt architecto voluptatem quidem rerum quibusdam, aut similique assumenda harum deserunt
-                            ullam dignissimos atque consequuntur deleniti nemo fugit autem.
-                        </p>
-
+                    <div class="summary-text row mx-5" style="width: 80%;">
+                        <div id="guide-content">
+                            {% if guide_content %}
+                                {{ guide_content|safe }}
+                            {% else %}
+                                <p class="guide text-color">Generating detailed guide... Please wait</p>
+                            {% endif %}
+                        </div>
                     </div>
 
                     <div class="row my-5 justify-content-center">
@@ -167,16 +140,14 @@
 
     </div>
 
-
-<!-- Add this to pass search_query_id to JavaScript -->
 {{ search_query_id|json_script:"search-query-id" }}
 
 <script>
-function checkCombinedSummary() {
+function checkContentStatus() {
     // Get search_query_id from the hidden element
     const searchId = JSON.parse(document.getElementById('search-query-id').textContent);
     
-    fetch(`/check-summaries/?search_id=${searchId}`)
+    fetch(`/check-content/?search_query_id=${searchId}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -184,24 +155,34 @@ function checkCombinedSummary() {
             return response.json();
         })
         .then(data => {
-            if (data.combined_summary) {
+            // Update summary if ready
+            if (data.summary) {
                 const summaryContainer = document.getElementById('loading-combined-summary');
                 if (summaryContainer) {
-                    summaryContainer.textContent = data.combined_summary;
+                    summaryContainer.textContent = data.summary;
                 }
             }
             
-            if (!data.is_ready) {
-                setTimeout(checkCombinedSummary, 5000);
+            // Update guide if ready
+            if (data.guide) {
+                const guideContainer = document.getElementById('guide-content');
+                if (guideContainer && guideContainer.textContent.includes('Generating')) {
+                    guideContainer.innerHTML = data.guide;
+                }
+            }
+            
+            // Continue checking if either content is not ready
+            if (!data.summary_ready || !data.guide_ready) {
+                setTimeout(checkContentStatus, 5000); // Check every 5 seconds
             }
         })
         .catch(error => {
-            console.error('Error checking summary:', error);
-            setTimeout(checkCombinedSummary, 5000);
+            console.error('Error checking content:', error);
+            setTimeout(checkContentStatus, 5000);
         });
 }
 
-document.addEventListener('DOMContentLoaded', checkCombinedSummary);
+document.addEventListener('DOMContentLoaded', checkContentStatus);
 </script>
     
 </body>

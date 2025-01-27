@@ -7,7 +7,7 @@ from .models import Transcript, SearchQuery
 from threading import Thread
 from .tasks import transcribe_and_embed_video_task
 from concurrent.futures import ThreadPoolExecutor
-from .generations import generate_and_store_summaries
+from .generations import generate_and_store_summaries, guide_generation
 import time
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
@@ -49,9 +49,7 @@ def addAdmin(request):
     return render(request, "App/AddAdmin.html")
 
 
-# Create a thread pool executor
 executor = ThreadPoolExecutor(max_workers=3)
-
 
 def search_videos(request):
     if request.method == 'POST':
@@ -59,16 +57,19 @@ def search_videos(request):
         try:
             # Fetch videos from YouTube
             video_data = fetch_youtube_videos(query)
-
+            
             # Check for existing search
             existing_search = SearchQuery.objects.filter(
                 query_text__iexact=query).first()
             if existing_search:
                 if existing_search.combined_summary:
                     # Return cached results
+                    guide_result = guide_generation(existing_search.id)
+                    guide_content = guide_result['guide'] if guide_result['success'] else None
                     return render(request, 'App/Result.html', {
                         'videos': video_data,
                         'combined_summary': existing_search.combined_summary,
+                        'guide_content': guide_content,
                         'search_query_id': existing_search.id
                     })
                 else:
@@ -77,11 +78,11 @@ def search_videos(request):
                         Transcript.objects.filter(
                             search_query=existing_search).delete()
                         existing_search.delete()
-
+            
             # Process as new search
             search_query = SearchQuery.objects.create(query_text=query)
             futures = []
-
+            
             for video in video_data:
                 # Avoid duplicate entries
                 if not Transcript.objects.filter(video_id=video['video_id']).exists():
@@ -99,24 +100,40 @@ def search_videos(request):
                         video['url']
                     )
                     futures.append(future)
-
-            # Function to generate summaries
-            def generate_summaries_when_ready():
+            
+            # Function to generate summaries and guide
+            def generate_content_when_ready():
                 try:
                     while not all(future.done() for future in futures):
                         time.sleep(1)
-                    result = generate_and_store_summaries(search_query.id)
-                    if result['success']:
-                        search_query.combined_summary = result['summary']
+                    
+                    # Generate summary first
+                    summary_result = generate_and_store_summaries(search_query.id)
+                    if summary_result['success']:
+                        search_query.combined_summary = summary_result['summary']
                         search_query.save()
+                    
+                     # Only generate guide after summary is successfully generated
+                        print("Summary generated, now generating guide...")
+                        guide_result = guide_generation(search_query.id)
+                        if guide_result['success']:
+                             search_query.guide_content = guide_result['guide']
+                             search_query.save()
+                        else:
+                            print(f"Guide generation failed: {guide_result.get('error')}")
+                    else:
+                        print(f"Summary generation failed: {summary_result.get('error')}")
+
                 except Exception as e:
-                    print(f"Error in summary generation: {str(e)}")
-
-            executor.submit(generate_summaries_when_ready)
-
+                    print(f"Error in content generation: {str(e)}")
+                    traceback.print_exc()
+            
+            executor.submit(generate_content_when_ready)
+            
             return render(request, 'App/Result.html', {
                 'videos': video_data,
                 'combined_summary': None,
+                'guide_content': None,
                 'search_query_id': search_query.id
             })
         except Exception as e:
@@ -124,8 +141,27 @@ def search_videos(request):
             return render(request, 'App/Result.html', {
                 'error': 'An error occurred while processing your request.'
             })
-
+    
     return render(request, 'App/Analysis.html')
+
+def check_content_status(request):
+    """Check the status of summary and guide generation."""
+    search_query_id = request.GET.get('search_query_id')
+    try:
+        search_query = SearchQuery.objects.get(id=search_query_id)
+        
+        
+        return JsonResponse({
+            'summary_ready': bool(search_query.combined_summary),
+            'guide_ready': bool(search_query.guide_content),
+            'summary': search_query.combined_summary if search_query.combined_summary else None,
+            'guide': search_query.guide_content if search_query.guide_content else None
+        })
+    except SearchQuery.DoesNotExist:
+        return JsonResponse({'error': 'Search query not found'}, status=404)
+    except Exception as e:
+        print(f"Error in check_content_status: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 def process_video_safely(video_id: str, video_url: str) -> None:

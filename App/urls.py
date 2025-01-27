@@ -28,5 +28,6 @@ urlpatterns = [
     path('adminDashboard/', views.adminDashboard, name='adminDashboard'),
     path('addAdmin/', views.addAdmin, name='addAdmin'),
     path('search/', views.search_videos, name='search_videos'),
-    path('check-summaries/', views.check_summaries_status, name='check_summaries'),]
+    path('check-summaries/', views.check_summaries_status, name='check_summaries'),
+    path('check-content/', views.check_content_status, name='check_content'),]
 
