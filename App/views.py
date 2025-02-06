@@ -49,7 +49,7 @@ def addAdmin(request):
     return render(request, "App/AddAdmin.html")
 
 
-executor = ThreadPoolExecutor(max_workers=3)
+executor = ThreadPoolExecutor(max_workers=5)
 
 def search_videos(request):
     if request.method == 'POST':
@@ -66,10 +66,12 @@ def search_videos(request):
                     # Return cached results
                     guide_result = guide_generation(existing_search.id)
                     guide_content = guide_result['guide'] if guide_result['success'] else None
+                    audio_url = guide_result.get('audio_url', '') if guide_result['success'] else ''
                     return render(request, 'App/Result.html', {
                         'videos': video_data,
                         'combined_summary': existing_search.combined_summary,
                         'guide_content': guide_content,
+                        'audio_url': audio_url,
                         'search_query_id': existing_search.id
                     })
                 else:
@@ -209,3 +211,21 @@ def check_summaries_status(request):
         # Catch-all for other unexpected errors
         print(f"Error in check_summaries_status: {str(e)}")
         return JsonResponse({'error': 'An unexpected error occurred.'}, status=500)
+
+
+
+# AUDIO CONTROL
+from django.http import FileResponse, Http404
+
+def download_audio(request, filename):
+    """
+    Serve audio file for download
+    """
+    audio_path = os.path.join(settings.MEDIA_ROOT, 'audio_guides', filename)
+    
+    if os.path.exists(audio_path):
+        response = FileResponse(open(audio_path, 'rb'))
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+    else:
+        raise Http404("Audio file not found")

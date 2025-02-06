@@ -5,11 +5,13 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from django.conf import settings
+from dotenv import load_dotenv
+import traceback
+from .videos import clean_and_refine_query
 from .tasks import load_vector_store
 from .models import Transcript
-from dotenv import load_dotenv
-from .videos import clean_and_refine_query
-import traceback
+from .tts_utils import generate_guide_audio
+
 
 # Load environment variables
 load_dotenv()
@@ -147,33 +149,39 @@ def generate_and_store_summaries(search_query_id: int) -> Dict:
 GUIDE_GENERATION_PROMPT = """
 User Query: "{query}"
 
-Create a detailed, structured travel guide based on the following video transcripts and summary. Include all relevant information about places, activities, and tips mentioned in the videos.
+        Create a detailed, structured travel guide based on the following video transcripts and summary. Include all relevant information about places, activities, and tips mentioned in the videos.
 
-Summary of Content:
-{summary}
+        Summary of Content:
+        {summary}
 
-Detailed Transcripts:
-{transcripts}
+        Detailed Transcripts:
+        {transcripts}
 
-Create a comprehensive guide with the following requirements:
-1. Include clear, bold headings for each major topic , use 12 font size for headings and 11 for paragraphs (especially those mentioned in the query)
-2. Organize information into well-structured sections
-3. Include specific details about locations, costs, and recommendations
-4. Maintain a clear and engaging writing style
-5. Format the content into proper paragraphs with full justification
+        Create a comprehensive guide with the following sections:
+        1. Introduction
+        2. Key Highlights
+        3. [Include other relevant sections based on the content]
 
-Important topics to cover (if mentioned in the content):
-- Transportation
-- Accommodation
-- Food and Dining
-- Tourist Attractions
-- Safety Tips
-- Best Times to Visit
-- Budget Considerations
+        Important topics to cover (if mentioned in the content):
+        - Transportation
+        - Accommodation
+        - Food and Dining
+        - Tourist Attractions
+        - Safety Tips
+        - Best Times to Visit
+        - Budget Considerations
 
-Format the guide using HTML(NO MARKUP/MARKDOWN) for proper styling. Make all headings bold using <strong> tags. but don't show html tags with content
+        Guidelines:
+        - Write in clear, natural paragraphs
+        - Use simple section headers
+        - Include specific details about locations, costs, and recommendations
+        - Keep a conversational but informative tone
+        - End each section with a complete thought
+
+        Format the guide in plain text with simple section headers and paragraphs. All text must be fully justified. Do not include any HTML, styling, or formatting tags.
 Ensure the content is engaging, informative, and well-organized:
 """
+
 
 
 def extract_main_topics(query: str, summary: str) -> list[str]:
@@ -254,12 +262,16 @@ def guide_generation(search_query_id: int) -> Dict:
         formatted_guide = f'<p class="guide text-color">{formatted_guide}</p>'
 
         print(" Guide generation complete!")
+
+        # Generate audio for the guide
+        audio_url = generate_guide_audio(formatted_guide, search_query_id)
+
         return {
             'success': True,
             'guide': formatted_guide,
-            'topics': main_topics
+            'topics': main_topics,
+            'audio_url': audio_url
         }
 
     except Exception as e:
-        print(f" Error in guide generation: {str(e)}")
         return {'success': False, 'error': str(e)}

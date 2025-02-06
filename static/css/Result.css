@@ -19,6 +19,7 @@
     background-color: rgba(255, 0, 0, 0.2) !important;
     border-radius: 10px;
     text-align: justify !important;
+    margin-top: 20dp;
 }
 .right-container{
     box-shadow: 10px 10px 20px rgba(240, 42, 42, 0.9);

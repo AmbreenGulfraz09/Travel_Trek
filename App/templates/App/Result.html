@@ -111,25 +111,41 @@
                         <h3 class="mx-2 d-flex align-items-center">
                             Guide
                         </h3>
-                         <p style="font-size: smaller;" class="my-3 mx-2">Here is detailed Guide you need, feel free to ask any question.</p>
-                         <span class="d-flex align-items-center ms-auto">
-                            <!-- Voice Icon with Tooltip -->
-                            <span class="mx-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Read">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#F01111" class="bi bi-volume-up-fill" viewBox="0 0 16 16">
-                                    <path d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303z"/>
-                                    <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.48 5.48 0 0 1 11.025 8a5.48 5.48 0 0 1-1.61 3.89z"/>
-                                    <path d="M8.707 11.182A4.5 4.5 0 0 0 10.025 8a4.5 4.5 0 0 0-1.318-3.182L8 5.525A3.5 3.5 0 0 1 9.025 8 3.5 3.5 0 0 1 8 10.475zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06"/>
+                        <p style="font-size: smaller;" class="my-3 mx-2">Here is detailed Guide you need, feel free to ask any question.</p>
+
+                        <audio id="guideAudio" style="display: none;">
+                           <source src="{{ audio_url }}" type="audio/mpeg">
+                           Your browser does not support the audio element.
+                       </audio>
+
+                        <span class="d-flex align-items-center ms-auto">
+                           <button id="audioControl" class="btn mx-2 d-flex align-items-center justify-content-center"
+                                style=" width: 60px; height: 40px; padding: 0; border-radius: 5px;"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Listen to Guide">
+                            <!-- play icon -->
+                             <svg id="playIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#FFFFFF" class="bi bi-volume-up-fill" viewBox="0 0 16 16">
+                               <path d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303z"/>
+                               <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.48 5.48 0 0 1 11.025 8a5.48 5.48 0 0 1-1.61 3.89z"/>
+                                <path d="M8.707 11.182A4.5 4.5 0 0 0 10.025 8a4.5 4.5 0 0 0-1.318-3.182L8 5.525A3.5 3.5 0 0 1 9.025 8 3.5 3.5 0 0 1 8 10.475zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06"/>
                                 </svg>
-                            </span>
-                            
-                            <!-- Download Icon with Tooltip -->
-                            <span class="mx-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Download as PDF">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#F01111" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
-                                    <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0"/>
-                                </svg>
-                            </span>
-                        </span>
-                    </div>
+                                <!--  Pause Icon (Hidden by default) -->
+                                <svg id="pauseIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#FFFFFF" class="bi bi-pause-circle" viewBox="0 0 16 16" style="display: none;">
+                                   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                   <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z"/>
+                                 </svg>
+                            </button>
+                           
+                           <!-- Download Icon with Tooltip -->
+                           <button id="audioControl" class="btn mx-2 d-flex align-items-center justify-content-center"
+                           style=" width: 60px; height: 40px; padding: 0;  border-radius: 8px;"
+                            data-bs-toggle="tooltip" data-bs-placement="top" title="Listen to Guide">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#FFFFFF" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+                                   <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0"/>
+                               </svg>
+                           </button>
+                       </span>
+                       
+                   </div>
                 
                     <div class="summary-text row mx-5" style="width: 80%;">
                         <div id="guide-content">
@@ -203,7 +219,42 @@ function checkContentStatus() {
 
 document.addEventListener('DOMContentLoaded', checkContentStatus);
 
+// Audio Control
+document.addEventListener('DOMContentLoaded', function() {
+    const audioControl = document.getElementById('audioControl');
+    const guideAudio = document.getElementById('guideAudio');
+    const playIcon = document.getElementById('playIcon');
+    const pauseIcon = document.getElementById('pauseIcon');
 
+    // Use Django template variable directly
+    const audioUrl = "{{ audio_url|default:'' }}";
+    
+    if (audioControl && guideAudio && audioUrl) {
+        guideAudio.src = audioUrl;
+
+        audioControl.addEventListener('click', function() {
+            if (guideAudio.paused) {
+                guideAudio.play();
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            } else {
+                guideAudio.pause();
+                pauseIcon.style.display = 'none';
+                playIcon.style.display = 'block';
+            }
+        });
+
+        guideAudio.addEventListener('ended', function() {
+            pauseIcon.style.display = 'none';
+            playIcon.style.display = 'block';
+        });
+    } else {
+        // Hide audio control if no audio URL
+        if (audioControl) {
+            audioControl.style.display = 'none';
+        }
+    }
+});
                     
 </script>
     

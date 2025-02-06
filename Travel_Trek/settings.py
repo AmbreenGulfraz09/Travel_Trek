@@ -143,3 +143,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VECTOR_STORE_PATH = os.path.join(BASE_DIR, 'vector_store', 'faiss_index')
+
+#  Audio files path
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

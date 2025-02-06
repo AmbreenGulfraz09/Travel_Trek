@@ -29,5 +29,6 @@ urlpatterns = [
     path('addAdmin/', views.addAdmin, name='addAdmin'),
     path('search/', views.search_videos, name='search_videos'),
     path('check-summaries/', views.check_summaries_status, name='check_summaries'),
-    path('check-content/', views.check_content_status, name='check_content'),]
+    path('check-content/', views.check_content_status, name='check_content'),
+    path('download_audio/<str:filename>', views.download_audio, name='download_audio'),]
 
