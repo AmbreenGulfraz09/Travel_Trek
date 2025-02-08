@@ -11,7 +11,10 @@ from .generations import generate_and_store_summaries, guide_generation
 import time
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.http import FileResponse, Http404
+import os
+import traceback
+from django.conf import settings
 
 def home(request):
     return render(request, 'App/home.html')
@@ -146,24 +149,35 @@ def search_videos(request):
     
     return render(request, 'App/Analysis.html')
 
+
 def check_content_status(request):
     """Check the status of summary and guide generation."""
     search_query_id = request.GET.get('search_query_id')
     try:
         search_query = SearchQuery.objects.get(id=search_query_id)
         
+        # Get the audio file URL if it exists
+        audio_url = None
+        if search_query.guide_content:
+            audio_filename = f"guide_{search_query_id}_*.mp3"
+            audio_dir = os.path.join(settings.MEDIA_ROOT, 'audio_guides')
+            audio_files = [f for f in os.listdir(audio_dir) if f.startswith(f"guide_{search_query_id}_")]
+            if audio_files:
+                audio_url = f'/media/audio_guides/{audio_files[0]}'
         
         return JsonResponse({
             'summary_ready': bool(search_query.combined_summary),
             'guide_ready': bool(search_query.guide_content),
             'summary': search_query.combined_summary if search_query.combined_summary else None,
-            'guide': search_query.guide_content if search_query.guide_content else None
+            'guide': search_query.guide_content if search_query.guide_content else None,
+            'audio_url': audio_url
         })
     except SearchQuery.DoesNotExist:
         return JsonResponse({'error': 'Search query not found'}, status=404)
     except Exception as e:
         print(f"Error in check_content_status: {str(e)}")
         return JsonResponse({'error': str(e)}, status=500)
+
 
 
 def process_video_safely(video_id: str, video_url: str) -> None:
@@ -213,19 +227,3 @@ def check_summaries_status(request):
         return JsonResponse({'error': 'An unexpected error occurred.'}, status=500)
 
 
-
-# AUDIO CONTROL
-from django.http import FileResponse, Http404
-
-def download_audio(request, filename):
-    """
-    Serve audio file for download
-    """
-    audio_path = os.path.join(settings.MEDIA_ROOT, 'audio_guides', filename)
-    
-    if os.path.exists(audio_path):
-        response = FileResponse(open(audio_path, 'rb'))
-        response['Content-Disposition'] = f'attachment; filename="{filename}"'
-        return response
-    else:
-        raise Http404("Audio file not found")
