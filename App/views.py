@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from googleapiclient.discovery import build
 from .videos import fetch_youtube_videos
 from django.utils.timezone import now
@@ -47,13 +47,10 @@ def admin(request):
 def adminDashboard(request):
     return render(request, 'App/AdminDashboard.html')
 
-
 def addAdmin(request):
     return render(request, "App/AddAdmin.html")
 
-
 executor = ThreadPoolExecutor(max_workers=5)
-
 def search_videos(request):
     if request.method == 'POST':
         query = request.POST.get('query')
@@ -68,8 +65,10 @@ def search_videos(request):
                 if existing_search.combined_summary:
                     # Return cached results
                     guide_result = guide_generation(existing_search.id)
-                    guide_content = guide_result['guide'] if guide_result['success'] else None
-                    audio_url = guide_result.get('audio_url', '') if guide_result['success'] else ''
+                    guide_content = guide_result.get('guide') if guide_result.get('success') else None
+                    # Remove guide_pdf from template context as it's handled via download endpoint
+                    audio_url = guide_result.get('audio_url', '') if guide_result.get('success') else ''
+                    
                     return render(request, 'App/Result.html', {
                         'videos': video_data,
                         'combined_summary': existing_search.combined_summary,
@@ -118,12 +117,12 @@ def search_videos(request):
                         search_query.combined_summary = summary_result['summary']
                         search_query.save()
                     
-                     # Only generate guide after summary is successfully generated
+                        # Only generate guide after summary is successfully generated
                         print("Summary generated, now generating guide...")
                         guide_result = guide_generation(search_query.id)
-                        if guide_result['success']:
-                             search_query.guide_content = guide_result['guide']
-                             search_query.save()
+                        if guide_result.get('success'):
+                            search_query.guide_content = guide_result.get('guide')
+                            search_query.save()
                         else:
                             print(f"Guide generation failed: {guide_result.get('error')}")
                     else:
@@ -137,10 +136,9 @@ def search_videos(request):
             
             return render(request, 'App/Result.html', {
                 'videos': video_data,
-                'combined_summary': None,
-                'guide_content': None,
                 'search_query_id': search_query.id
             })
+            
         except Exception as e:
             print(f"Error in search_videos: {str(e)}")
             return render(request, 'App/Result.html', {
@@ -149,81 +147,123 @@ def search_videos(request):
     
     return render(request, 'App/Analysis.html')
 
-
+    
 def check_content_status(request):
-    """Check the status of summary and guide generation."""
     search_query_id = request.GET.get('search_query_id')
     try:
         search_query = SearchQuery.objects.get(id=search_query_id)
         
-        # Get the audio file URL if it exists
+        # Modify audio URL handling
         audio_url = None
         if search_query.guide_content:
             audio_filename = f"guide_{search_query_id}_*.mp3"
             audio_dir = os.path.join(settings.MEDIA_ROOT, 'audio_guides')
-            audio_files = [f for f in os.listdir(audio_dir) if f.startswith(f"guide_{search_query_id}_")]
-            if audio_files:
-                audio_url = f'/media/audio_guides/{audio_files[0]}'
-        
+            try:
+                if os.path.exists(audio_dir):
+                    audio_files = [f for f in os.listdir(audio_dir) if f.startswith(f"guide_{search_query_id}_")]
+                    if audio_files:
+                        # Use os.path.join for proper path construction
+                        audio_path = os.path.join('audio_guides', audio_files[0])
+                        audio_url = f'/media/{audio_path}'
+                        
+                        # Verify file permissions
+                        full_path = os.path.join(settings.MEDIA_ROOT, audio_path)
+                        if not os.access(full_path, os.R_OK):
+                            print(f"Permission denied for file: {full_path}")
+            except Exception as e:
+                print(f"Error accessing audio file: {str(e)}")
+
         return JsonResponse({
             'summary_ready': bool(search_query.combined_summary),
             'guide_ready': bool(search_query.guide_content),
+            'pdf_ready': bool(search_query.guide_pdf and search_query.pdf_filename),
             'summary': search_query.combined_summary if search_query.combined_summary else None,
             'guide': search_query.guide_content if search_query.guide_content else None,
             'audio_url': audio_url
         })
-    except SearchQuery.DoesNotExist:
-        return JsonResponse({'error': 'Search query not found'}, status=404)
     except Exception as e:
         print(f"Error in check_content_status: {str(e)}")
         return JsonResponse({'error': str(e)}, status=500)
 
 
-
 def process_video_safely(video_id: str, video_url: str) -> None:
-    """
-    Wrapper function to safely process videos in threads.
-    """
-    try:
-        print(f"Processing video {video_id}") 
-        transcribe_and_embed_video_task(video_id, video_url)
-        print(f"Processing completed for video {video_id}")
-    except Exception as e:
-        print(f"Error processing video {video_id}: {str(e)}")
+        """
+        Wrapper function to safely process videos in threads.
+        """
+        try:
+            print(f"Processing video {video_id}") 
+            transcribe_and_embed_video_task(video_id, video_url)
+            print(f"Processing completed for video {video_id}")
+        except Exception as e:
+            print(f"Error processing video {video_id}: {str(e)}")
 
 
 def check_summaries_status(request):
-    """
-    API endpoint to check if combined summary is ready
-    """
+        """
+        API endpoint to check if combined summary is ready
+        """
+        try:
+            # Get 'search_id' from the request
+            search_id = request.GET.get('search_id')
+
+            # Validate 'search_id'
+            if not search_id:
+                return JsonResponse({'error': "Missing 'search_id' in the request."}, status=400)
+
+            # Attempt to retrieve the SearchQuery record
+            search_query = SearchQuery.objects.get(id=search_id)
+
+            # Respond with the summary status
+            return JsonResponse({
+                'combined_summary': search_query.combined_summary,
+                'is_ready': bool(search_query.combined_summary)
+            })
+
+        except ValueError:
+            # Handle invalid search_id (non-numeric or malformed)
+            return JsonResponse({'error': "'search_id' must be a valid number."}, status=400)
+
+        except ObjectDoesNotExist:
+            # Handle non-existent SearchQuery record
+            return JsonResponse({'error': "No search found for the given 'search_id'."}, status=404)
+
+        except Exception as e:
+            # Catch-all for other unexpected errors
+            print(f"Error in check_summaries_status: {str(e)}")
+            return JsonResponse({'error': 'An unexpected error occurred.'}, status=500)
+
+
+def download_guide(request):
+    """Handle PDF guide download."""
     try:
-        # Get 'search_id' from the request
-        search_id = request.GET.get('search_id')
-
-        # Validate 'search_id'
-        if not search_id:
-            return JsonResponse({'error': "Missing 'search_id' in the request."}, status=400)
-
-        # Attempt to retrieve the SearchQuery record
-        search_query = SearchQuery.objects.get(id=search_id)
-
-        # Respond with the summary status
-        return JsonResponse({
-            'combined_summary': search_query.combined_summary,
-            'is_ready': bool(search_query.combined_summary)
-        })
-
-    except ValueError:
-        # Handle invalid search_id (non-numeric or malformed)
-        return JsonResponse({'error': "'search_id' must be a valid number."}, status=400)
-
-    except ObjectDoesNotExist:
-        # Handle non-existent SearchQuery record
-        return JsonResponse({'error': "No search found for the given 'search_id'."}, status=404)
-
+        search_query_id = request.GET.get('search_query_id')
+        search_query = SearchQuery.objects.get(id=search_query_id)
+        
+        # Check if PDF exists
+        if not search_query.guide_pdf:
+            # If guide exists but PDF doesn't, generate it now
+            if search_query.guide_content:
+                pdf_generator = PDFGenerator()
+                guide_pdf = pdf_generator.generate_pdf(
+                    search_query.guide_content, 
+                    search_query_id
+                )
+                if guide_pdf['success']:
+                    search_query.guide_pdf = guide_pdf['pdf_content']
+                    search_query.pdf_filename = guide_pdf['pdf_filename']
+                    search_query.save()
+                else:
+                    return HttpResponse("Error generating PDF", status=500)
+            else:
+                return HttpResponse("Guide content not found", status=404)
+        
+        response = HttpResponse(search_query.guide_pdf, content_type='application/pdf')
+        filename = search_query.pdf_filename or 'travel_guide.pdf'
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+            
+    except SearchQuery.DoesNotExist:
+        return HttpResponse("Search query not found", status=404)
     except Exception as e:
-        # Catch-all for other unexpected errors
-        print(f"Error in check_summaries_status: {str(e)}")
-        return JsonResponse({'error': 'An unexpected error occurred.'}, status=500)
-
-
+        print(f"Error downloading guide: {str(e)}")
+        return HttpResponse("Error downloading guide", status=500)

@@ -144,6 +144,13 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VECTOR_STORE_PATH = os.path.join(BASE_DIR, 'vector_store', 'faiss_index')
 
-#  Audio files path
+# Media files settings
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# Define subdirectories for Audio and pdfs
+AUDIO_FILES_DIR = os.path.join(MEDIA_ROOT, 'audio_guides')
+PDF_FILES_DIR = os.path.join(MEDIA_ROOT, 'pdf_guides')
+
+# wkhtmltopdf settings
+WKHTMLTOPDF_PATH = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'

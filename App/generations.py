@@ -11,7 +11,8 @@ from .videos import clean_and_refine_query
 from .tasks import load_vector_store
 from .models import Transcript
 from .tts_utils import generate_guide_audio
-
+from .pdf_generator import PDFGenerator
+from threading import Thread
 
 # Load environment variables
 load_dotenv()
@@ -203,75 +204,98 @@ def extract_main_topics(query: str, summary: str) -> list[str]:
     topics_str = topic_chain.run(query=query, summary=summary)
     return [topic.strip() for topic in topics_str.split(',')]
 
-
 def guide_generation(search_query_id: int) -> Dict:
     """Generate a structured travel guide based on video transcripts and summaries."""
     try:
-        print(
-            f" Starting guide generation for search query {search_query_id}...")
-
+        print(f"Starting guide generation for search query {search_query_id}...")
+        
         # Get transcripts and existing summary
         transcripts = Transcript.objects.filter(
             search_query_id=search_query_id,
             transcript_text__isnull=False
         )
-
+        
         if not transcripts.exists():
             return {'success': False, 'error': 'No transcripts available for this guide'}
-
+        
         # Get the search query and summary
         search_query = transcripts.first().search_query
         summary_result = generate_and_store_summaries(search_query_id)
-
+        
         if not summary_result['success']:
             return {'success': False, 'error': 'Failed to generate summary for guide'}
-
-        # Extract main topics to ensure they're included
+        
+        # Extract main topics
         main_topics = extract_main_topics(
-            search_query.query_text, summary_result['summary'])
-
+            search_query.query_text, summary_result['summary']
+        )
+        
         # Create the guide generation chain
         guide_prompt = PromptTemplate(
             input_variables=["query", "summary", "transcripts"],
             template=GUIDE_GENERATION_PROMPT
         )
-
+        
         guide_chain = LLMChain(
             llm=llm,
             prompt=guide_prompt,
             verbose=False
         )
-
+        
         # Combine transcripts text
         combined_transcripts = "\n\n".join([
             f"{transcript.transcript_text}"
             for transcript in transcripts
         ])
-
+        
         # Generate the guide
-        print(" Generating detailed guide...")
+        print("Generating detailed guide...")
         guide_content = guide_chain.run(
             query=search_query.query_text,
             summary=summary_result['summary'],
             transcripts=combined_transcripts
         )
-
+        
         # Format the guide content for HTML display
         formatted_guide = guide_content.replace(
-            '\n\n', '</p><p class="guide text-color">')
+            '\n\n', '</p><p class="guide text-color">'
+        )
         formatted_guide = f'<p class="guide text-color">{formatted_guide}</p>'
-
-        print(" Guide generation complete!")
-
-        # Generate audio for the guide
+        
+        # Store the guide content immediately
+        search_query.guide_content = formatted_guide
+        search_query.save()
+        
+        print("Guide generation complete!")
+        
+        # Generate audio for the guide in background
         audio_url = generate_guide_audio(formatted_guide, search_query_id)
-
+        
+        # Start PDF generation in a separate thread
+        def generate_pdf_async():
+            try:
+                print(" Generating PDF version...")
+                pdf_generator = PDFGenerator()
+                guide_pdf = pdf_generator.generate_pdf(guide_content, search_query_id)
+                if guide_pdf['success']:
+                    search_query.guide_pdf = guide_pdf['pdf_content']
+                    search_query.pdf_filename = guide_pdf['pdf_filename']
+                    search_query.save()
+                    print("PDF generation complete!")
+                else:
+                    print(f"PDF generation failed: {guide_pdf['error']}")
+            except Exception as e:
+                print(f"Error in PDF generation: {str(e)}")
+        
+        Thread(target=generate_pdf_async).start()
+        
         return {
             'success': True,
             'guide': formatted_guide,
             'topics': main_topics,
             'audio_url': audio_url
         }
-
+        
     except Exception as e:
+        print(f"Error in guide generation: {str(e)}")
         return {'success': False, 'error': str(e)}
