@@ -2,6 +2,7 @@ import pdfkit
 import os
 from django.conf import settings
 from bs4 import BeautifulSoup
+import re
 from io import BytesIO
 
 class PDFGenerator:
@@ -30,14 +31,50 @@ class PDFGenerator:
         # Configure pdfkit configuration
         self.config = pdfkit.configuration(wkhtmltopdf=self.wkhtmltopdf_path)
 
-    def create_styled_html(self, guide_content):
-        """Create styled HTML content for PDF generation"""
-        # Clean the guide content if it contains HTML tags
+    def process_content(self, guide_content):
+        """Process and structure the guide content"""
+        # Clean HTML tags if present
         if isinstance(guide_content, str) and '<p class="guide text-color">' in guide_content:
             soup = BeautifulSoup(guide_content, 'html.parser')
             guide_content = soup.get_text()
 
-        # Create HTML template with styles
+        # Split content into lines and clean them
+        lines = [line.strip() for line in guide_content.split('\n') if line.strip()]
+        processed_content = []
+        
+        # Process first line as main title
+        if lines:
+            main_title = lines[0].strip()
+            processed_content.append(f'<h1 class="main-title">{main_title}</h1>')
+            lines = lines[1:]
+
+        current_section = []
+        
+        for line in lines:
+            # Check if line starts with a number followed by period
+            if re.match(r'^\d+\.', line):
+                # If we have content from previous section, add it first
+                if current_section:
+                    processed_content.append(f'<p class="section-content">{" ".join(current_section)}</p>')
+                    current_section = []
+                
+                # Clean the line and make it a heading
+                cleaned_heading = line.strip()
+                processed_content.append(f'<h2 class="section-heading">{cleaned_heading}</h2>')
+            else:
+                # Add to current section content
+                current_section.append(line)
+
+        # Add any remaining content
+        if current_section:
+            processed_content.append(f'<p class="section-content">{" ".join(current_section)}</p>')
+
+        return '\n'.join(processed_content)
+
+    def create_styled_html(self, guide_content):
+        """Create styled HTML content for PDF generation"""
+        processed_content = self.process_content(guide_content)
+
         html_content = f"""
         <!DOCTYPE html>
         <html>
@@ -48,27 +85,29 @@ class PDFGenerator:
                     font-family: Arial, sans-serif;
                     line-height: 1.6;
                     color: #333;
-                    text-align: justify;
+                    padding: 20px;
                 }}
-                h1 {{
-                    color: #2c3e50;
+                .main-title {{
                     font-size: 24px;
-                    margin-bottom: 20px;
+                    font-weight: bold;
+                    text-align: center;
+                    margin-bottom: 30px;
                 }}
-                h2 {{
-                    color: #34495e;
-                    font-size: 20px;
+                .section-heading {{
+                    font-size: 16px;
+                    font-weight: bold;
                     margin-top: 20px;
-                    margin-bottom: 15px;
+                    margin-bottom: 10px;
                 }}
-                p {{
+                .section-content {{
                     margin-bottom: 15px;
                     text-align: justify;
+                    font-size: 14px;
                 }}
             </style>
         </head>
         <body>
-            {guide_content}
+            {processed_content}
         </body>
         </html>
         """
@@ -106,7 +145,7 @@ class PDFGenerator:
 
             return {
                 'success': True,
-                'pdf_content': pdf_content,  # This is already in bytes
+                'pdf_content': pdf_content,
                 'pdf_filename': pdf_filename,
                 'pdf_path': pdf_path
             }

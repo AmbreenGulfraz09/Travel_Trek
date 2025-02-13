@@ -288,8 +288,7 @@
                 console.error('Error checking content:', error);
                 setTimeout(checkContentStatus, 5000);
             });
-    }
-    
+        }
     // Handle PDF download
     function handleDownload(event) {
         event.preventDefault();
@@ -298,7 +297,7 @@
             console.log('Guide not ready yet');
             return;
         }
-    
+
         const searchId = JSON.parse(document.getElementById('search-query-id').textContent);
         const downloadBtn = event.currentTarget;
         
@@ -310,26 +309,29 @@
                 <span class="visually-hidden">Loading...</span>
             </div>
         `;
-    
+
         fetch(`/download-guide/?search_query_id=${searchId}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                return response.blob();
+                // Store filename from Content-Disposition header before consuming response
+                const contentDisposition = response.headers.get('Content-Disposition');
+                const filenameMatch = contentDisposition && contentDisposition.match(/filename="(.+)"/);
+                const filename = filenameMatch ? filenameMatch[1] : 'travel_guide.pdf';
+                
+                return response.blob().then(blob => ({ blob, filename }));
             })
-            .then(blob => {
+            .then(({ blob, filename }) => {
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
-                // Get filename from response header if available
-                const contentDisposition = response.headers.get('Content-Disposition');
-                const filenameMatch = contentDisposition && contentDisposition.match(/filename="(.+)"/);
-                a.download = filenameMatch ? filenameMatch[1] : 'travel_guide.pdf';
+                a.download = filename;
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
             })
             .catch(error => {
                 console.error('Error downloading guide:', error);
@@ -341,7 +343,6 @@
                 downloadBtn.innerHTML = originalHtml;
             });
     }
-    
     // Audio player functionality
     function setupAudioPlayer() {
         if (uiElements.audioControl && uiElements.guideAudio) {
