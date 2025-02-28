@@ -33,5 +33,6 @@ urlpatterns = [
     path('check-summaries/', views.check_summaries_status, name='check_summaries'),
     path('check-content/', views.check_content_status, name='check_content'),
     path ('download-guide/', views.download_guide, name= 'download_guide'),
+    path('answer_question/', views.answer_question, name='answer_question'),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

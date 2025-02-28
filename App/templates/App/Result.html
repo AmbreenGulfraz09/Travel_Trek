@@ -156,16 +156,33 @@
                                 <p class="guide text-color">Generating detailed guide... Please wait</p>
                             {% endif %}
                         </div>
+                        <div id="resultContainer" data-search-query-id="{{ search_query_id }}">
+                            <div class="row">
+                                <!-- User message -->
+                                <div class="col-md-6">
+                                    <div id="question" class="user-message" style="background-color: #c4c7ca; border-radius: 10px; padding: 10px; margin-bottom: 10px; color: black;">
+                                        <p>User message goes here...</p>
+                                    </div>
+                                </div>
+                                <!-- System response -->
+                                <div id="answer" class="col-md-6 offset-md-6">
+                                    <div class="system-response" style="background-color: rgba(255, 0, 0, 0.2); border-radius: 10px; padding: 10px; margin-bottom: 10px; color: black;">
+                                        <p>System response goes here...</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
 
                     <!-- Query input -->
                     <div class="row my-5 justify-content-center">
                         <div class="input-group" style="width: 90%;">
                             <!-- Query input field -->
-                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                            <input type="text" class="form-control" id="qinput" aria-describedby="emailHelp"
                                 placeholder="Ask Anything">
                             <!-- Search button inside the input field -->
-                            <button type="button" class="btn "onclick="">Search</button>
+                            <button id="qSearch" type="button" class="btn "onclick="">Search</button>
 
                         </div>
                     </div>
@@ -179,12 +196,12 @@
 {% if search_query_id %}
     {{ search_query_id|json_script:"search-query-id" }}
 {% else %}
-    <script>
-        console.error('No search query ID available');
-    </script>
+<script>
+    console.error('No search query ID available');
+</script>
 {% endif %}
 
-    <script>
+<script>
     // State management for content loading
     const contentState = {
         summaryReady: false,
@@ -395,7 +412,91 @@
         // Start checking content status
         checkContentStatus();
     });
-    </script>
+
+
+// QUESTIONING ANSWERING FUNCTIONALITY
+document.addEventListener('DOMContentLoaded', function() {
+    let question = document.getElementById('question');
+    let answer = document.getElementById('answer');
+    let qinput = document.getElementById('qinput');
+    let qSearch = document.getElementById('qSearch');
+
+    const searchQueryId = document.getElementById('search-query-id').value;
+    
+    // Hide question and answer sections initially
+    question.style.display = 'none';
+    answer.style.display = 'none';
+    
+    qSearch.addEventListener('click', function() {
+        const userQuery = qinput.value.trim();
+        
+        if (!userQuery) {
+            return; // Don't process empty queries
+        }
+        
+        // Display the user's question
+        question.style.display = 'block';
+        question.innerHTML = '<p>' + userQuery + '</p>';
+        
+        // Show loading message
+        answer.style.display = 'block';
+        answer.innerHTML = '<p>Processing your question...</p>';
+        
+        // Send the query to the server
+        fetch('/answer_question/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCsrfToken()
+            },
+            body: new URLSearchParams({
+                'user_query': userQuery,
+                'search_query_id': searchQueryId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                answer.innerHTML = '<p>' + data.answer + '</p>';
+            } else {
+                answer.innerHTML = '<p>Error: ' + (data.error || 'Unknown error occurred') + '</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            answer.innerHTML = '<p>Error: Failed to process your question. Please try again.</p>';
+        });
+        
+        // Clear the input field
+        qinput.value = '';
+    });
+    
+    // Function to get CSRF token from cookies
+    function getCsrfToken() {
+        const name = 'csrftoken';
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    // Allow pressing Enter key to submit query
+    qinput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            qSearch.click();
+        }
+    });
+});
+
+</script>
     
 </body>
 

@@ -3,11 +3,7 @@ from django.http import JsonResponse, HttpResponse
 from googleapiclient.discovery import build
 from .videos import fetch_youtube_videos
 from django.utils.timezone import now
-from .models import Transcript, SearchQuery
 from threading import Thread
-from .tasks import transcribe_and_embed_video_task
-from concurrent.futures import ThreadPoolExecutor
-from .generations import generate_and_store_summaries, guide_generation
 import time
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
@@ -15,6 +11,13 @@ from django.http import FileResponse, Http404
 import os
 import traceback
 from django.conf import settings
+
+from .tasks import transcribe_and_embed_video_task
+from concurrent.futures import ThreadPoolExecutor
+from .generations import generate_and_store_summaries, guide_generation
+from .query_processor import process_query
+from .models import Transcript, SearchQuery
+
 
 def home(request):
     return render(request, 'App/home.html')
@@ -66,7 +69,6 @@ def search_videos(request):
                     # Return cached results
                     guide_result = guide_generation(existing_search.id)
                     guide_content = guide_result.get('guide') if guide_result.get('success') else None
-                    # Remove guide_pdf from template context as it's handled via download endpoint
                     audio_url = guide_result.get('audio_url', '') if guide_result.get('success') else ''
                     
                     return render(request, 'App/Result.html', {
@@ -152,8 +154,7 @@ def check_content_status(request):
     search_query_id = request.GET.get('search_query_id')
     try:
         search_query = SearchQuery.objects.get(id=search_query_id)
-        
-        # Modify audio URL handling
+
         audio_url = None
         if search_query.guide_content:
             audio_filename = f"guide_{search_query_id}_*.mp3"
@@ -162,11 +163,9 @@ def check_content_status(request):
                 if os.path.exists(audio_dir):
                     audio_files = [f for f in os.listdir(audio_dir) if f.startswith(f"guide_{search_query_id}_")]
                     if audio_files:
-                        # Use os.path.join for proper path construction
                         audio_path = os.path.join('audio_guides', audio_files[0])
                         audio_url = f'/media/{audio_path}'
                         
-                        # Verify file permissions
                         full_path = os.path.join(settings.MEDIA_ROOT, audio_path)
                         if not os.access(full_path, os.R_OK):
                             print(f"Permission denied for file: {full_path}")
@@ -205,14 +204,11 @@ def check_summaries_status(request):
         try:
             # Get 'search_id' from the request
             search_id = request.GET.get('search_id')
-
             # Validate 'search_id'
             if not search_id:
                 return JsonResponse({'error': "Missing 'search_id' in the request."}, status=400)
-
             # Attempt to retrieve the SearchQuery record
             search_query = SearchQuery.objects.get(id=search_id)
-
             # Respond with the summary status
             return JsonResponse({
                 'combined_summary': search_query.combined_summary,
@@ -220,15 +216,12 @@ def check_summaries_status(request):
             })
 
         except ValueError:
-            # Handle invalid search_id (non-numeric or malformed)
             return JsonResponse({'error': "'search_id' must be a valid number."}, status=400)
 
         except ObjectDoesNotExist:
-            # Handle non-existent SearchQuery record
             return JsonResponse({'error': "No search found for the given 'search_id'."}, status=404)
 
         except Exception as e:
-            # Catch-all for other unexpected errors
             print(f"Error in check_summaries_status: {str(e)}")
             return JsonResponse({'error': 'An unexpected error occurred.'}, status=500)
 
@@ -267,3 +260,33 @@ def download_guide(request):
     except Exception as e:
         print(f"Error downloading guide: {str(e)}")
         return HttpResponse("Error downloading guide", status=500)
+
+# QUESTIOING FUNCTIONALITY
+def answer_question(request):
+    """
+    Process a user question about the video content.
+    """
+    if request.method == 'POST':
+        try:
+            search_query_id = request.POST.get('search_query_id')
+            user_query = request.POST.get('user_query')
+            
+            if not search_query_id or not user_query:
+                return JsonResponse({
+                    'success': False, 
+                    'error': 'Missing search_query_id or user_query'
+                }, status=400)
+            
+            # Process the query
+            result = process_query(search_query_id, user_query)
+            
+            return JsonResponse(result)
+            
+        except Exception as e:
+            print(f"Error in answer_question: {str(e)}")
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            }, status=500)
+    
+    return JsonResponse({'error': 'POST method required'}, status=400)

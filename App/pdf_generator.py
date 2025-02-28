@@ -8,7 +8,7 @@ from io import BytesIO
 class PDFGenerator:
     def __init__(self):
         # Configure wkhtmltopdf path based on operating system
-        if os.name == 'nt':  # Windows
+        if os.name == 'nt':  
             self.wkhtmltopdf_path = settings.WKHTMLTOPDF_PATH
         else:
             print("Path not found for wkhtmltopdf.")
