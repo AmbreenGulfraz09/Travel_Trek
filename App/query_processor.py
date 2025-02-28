@@ -7,7 +7,7 @@ from langchain_community.vectorstores.faiss import FAISS
 from langchain.prompts import PromptTemplate
 from langchain_huggingface import HuggingFaceEmbeddings
 from django.conf import settings
-
+from dotenv import load_dotenv
 from .models import SearchQuery, Transcript
 
 # Initialize embeddings
@@ -90,7 +90,7 @@ def process_query(search_query_id: str, user_query: str) -> Dict[str, Any]:
         load_dotenv()
         gemini_key = os.getenv("GeminiAPIkey")
 
-# Initialize the LLM directly using ChatGoogleGenerativeAI
+        # Initialize the LLM 
         llm = ChatGoogleGenerativeAI(
              model="models/gemini-1.5-flash",
              google_api_key=gemini_key,

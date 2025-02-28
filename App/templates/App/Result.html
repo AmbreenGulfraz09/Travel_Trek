@@ -165,7 +165,7 @@
                                     </div>
                                 </div>
                                 <!-- System response -->
-                                <div id="answer" class="col-md-6 offset-md-6">
+                                <div id="answer" class="col-md-8 offset-md-6">
                                     <div class="system-response" style="background-color: rgba(255, 0, 0, 0.2); border-radius: 10px; padding: 10px; margin-bottom: 10px; color: black;">
                                         <p>System response goes here...</p>
                                     </div>
@@ -416,60 +416,131 @@
 
 // QUESTIONING ANSWERING FUNCTIONALITY
 document.addEventListener('DOMContentLoaded', function() {
-    let question = document.getElementById('question');
-    let answer = document.getElementById('answer');
+    let resultContainer = document.getElementById('resultContainer');
     let qinput = document.getElementById('qinput');
     let qSearch = document.getElementById('qSearch');
-
-    const searchQueryId = document.getElementById('search-query-id').value;
     
-    // Hide question and answer sections initially
-    question.style.display = 'none';
-    answer.style.display = 'none';
+    // Get search query ID - try both methods
+    let searchQueryId;
+    if (document.getElementById('search-query-id')) {
+        searchQueryId = JSON.parse(document.getElementById('search-query-id').textContent);
+    } else if (resultContainer) {
+        searchQueryId = resultContainer.getAttribute('data-search-query-id');
+    }
     
-    qSearch.addEventListener('click', function() {
-        const userQuery = qinput.value.trim();
+    console.log("Search Query ID:", searchQueryId);
+    
+    // Initialize conversation container
+    if (resultContainer) {
+        // Clear any placeholder content
+        resultContainer.innerHTML = '';
+    }
+    
+    if (qSearch) {
+        qSearch.addEventListener('click', function() {
+            if (!qinput) return;
+            
+            const userQuery = qinput.value.trim();
+            
+            if (!userQuery) {
+                return; 
+            }
+            
+            if (!searchQueryId) {
+                console.error("No search query ID found");
+                addMessageToConversation("Error: Search query ID not found", false);
+                return;
+            }
+            
+            // Add user question to conversation
+            addMessageToConversation(userQuery, true);
+            
+            // Show loading message
+            const loadingId = addMessageToConversation("Processing your question...", false);
+            
+            // Send the query to the server
+            fetch('/answer_question/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: new URLSearchParams({
+                    'user_query': userQuery,
+                    'search_query_id': searchQueryId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Remove loading message
+                removeMessage(loadingId);
+                
+                if (data.success) {
+                    addMessageToConversation(data.answer, false);
+                } else {
+                    addMessageToConversation("Error: " + (data.error || 'Unknown error occurred'), false);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Remove loading message
+                removeMessage(loadingId);
+                addMessageToConversation("Error: Failed to process your question. Please try again.", false);
+            });
+            
+            // Clear the input field
+            qinput.value = '';
+        });
+    }
+    
+    // Function to add messages to the conversation history
+    function addMessageToConversation(message, isUser) {
+        if (!resultContainer) return null;
         
-        if (!userQuery) {
-            return; // Don't process empty queries
+        const messageId = 'msg-' + Date.now();
+        const newRow = document.createElement('div');
+        newRow.className = 'row mb-3';
+        
+        if (isUser) {
+            // User message
+            newRow.innerHTML = `
+                <div class="col-md-6">
+                    <div id="${messageId}" class="user-message" style="background-color: #c4c7ca; border-radius: 10px; padding: 10px; color: black;">
+                        <p>${message}</p>
+                    </div>
+                </div>
+                <div class="col-md-6"></div>
+            `;
+        } else {
+            // System response - using full width (col-md-8)
+            newRow.innerHTML = `
+                <div class="col-md-4"></div>
+                <div class="col-md-8">
+                    <div id="${messageId}" class="system-response" style="background-color: rgba(255, 0, 0, 0.2); border-radius: 10px; padding: 10px; color: black;">
+                        <p>${message}</p>
+                    </div>
+                </div>
+            `;
         }
         
-        // Display the user's question
-        question.style.display = 'block';
-        question.innerHTML = '<p>' + userQuery + '</p>';
+        resultContainer.appendChild(newRow);
+        // Scroll to the bottom to see the latest message
+        resultContainer.scrollTop = resultContainer.scrollHeight;
         
-        // Show loading message
-        answer.style.display = 'block';
-        answer.innerHTML = '<p>Processing your question...</p>';
-        
-        // Send the query to the server
-        fetch('/answer_question/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': getCsrfToken()
-            },
-            body: new URLSearchParams({
-                'user_query': userQuery,
-                'search_query_id': searchQueryId
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                answer.innerHTML = '<p>' + data.answer + '</p>';
-            } else {
-                answer.innerHTML = '<p>Error: ' + (data.error || 'Unknown error occurred') + '</p>';
+        return messageId;
+    }
+    
+    // Function to remove a message by ID
+    function removeMessage(messageId) {
+        if (!messageId) return;
+        const element = document.getElementById(messageId);
+        if (element) {
+            const parentRow = element.closest('.row');
+            if (parentRow) {
+                parentRow.remove();
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            answer.innerHTML = '<p>Error: Failed to process your question. Please try again.</p>';
-        });
-        
-        // Clear the input field
-        qinput.value = '';
-    });
+        }
+    }
     
     // Function to get CSRF token from cookies
     function getCsrfToken() {
@@ -489,11 +560,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Allow pressing Enter key to submit query
-    qinput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            qSearch.click();
-        }
-    });
+    if (qinput) {
+        qinput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && qSearch) {
+                qSearch.click();
+            }
+        });
+    }
 });
 
 </script>

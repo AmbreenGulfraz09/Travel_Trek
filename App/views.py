@@ -261,7 +261,8 @@ def download_guide(request):
         print(f"Error downloading guide: {str(e)}")
         return HttpResponse("Error downloading guide", status=500)
 
-# QUESTIOING FUNCTIONALITY
+
+# QUESTIONING FUNCTIONALITY
 def answer_question(request):
     """
     Process a user question about the video content.
@@ -276,6 +277,10 @@ def answer_question(request):
                     'success': False, 
                     'error': 'Missing search_query_id or user_query'
                 }, status=400)
+            
+            # Debug logging
+            print(f"Processing query for search_query_id: {search_query_id}")
+            print(f"User query: {user_query}")
             
             # Process the query
             result = process_query(search_query_id, user_query)
