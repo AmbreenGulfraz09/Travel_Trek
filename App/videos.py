@@ -63,7 +63,7 @@ def fetch_youtube_videos(query):
             q=query,
             # this parameter to get all video properties in response.
             part='snippet',
-            maxResults=5,
+            maxResults=10,
             type='video',
             relevanceLanguage='en',
             order='relevance',

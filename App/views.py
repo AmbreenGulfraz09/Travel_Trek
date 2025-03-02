@@ -45,8 +45,8 @@ def adminDashboard(request):
     return render(request, 'App/AdminDashboard.html')
 
 
-def addAdmin(request):
-    return render(request, "App/AddAdmin.html")
+def feedback(request):
+    return render(request, "App/Feedbacks.html")
 
 
 # Create a thread pool executor
