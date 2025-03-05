@@ -50,8 +50,11 @@ def admin(request):
 def adminDashboard(request):
     return render(request, 'App/AdminDashboard.html')
 
-def addAdmin(request):
-    return render(request, "App/AddAdmin.html")
+
+
+def feedback(request):
+    return render(request, "App/Feedbacks.html")
+
 
 executor = ThreadPoolExecutor(max_workers=5)
 def search_videos(request):

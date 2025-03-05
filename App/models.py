@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class SearchQuery(models.Model):
     query_text = models.CharField(max_length=255)
     combined_summary = models.TextField(null=True, blank=True)

@@ -20,45 +20,32 @@
     <div class="container-fluid my-5" style="overflow: hidden;">
         <!-- video section -->
         <div class="row gx-5">
-            <div class="col-md-6">
+            <div class="col-md-6" style="max-height: 180vh; overflow-y: auto;">
                 {% if videos %}
                 {% for video in videos %}
-                <!-- YouTube video details -->
                 <div class="col-md-12 mb-5">
-                    <!-- Video container -->
                     <div class="row">
-                        <!-- Picture section -->
                         <div class="col-md-5">
                             <div class="pic">
-                                <!-- Video thumbnail -->
-                                <img src="{{ video.thumbnail }}" alt="Thumbnail" class="img-fluid"
-                                    style="width: 100%; height: auto;">
+                                <img src="{{ video.thumbnail }}" alt="Thumbnail" class="img-fluid" style="width: 100%; height: auto;">
                             </div>
                         </div>
-                        <!-- Text section -->
                         <div class="col-md-7">
-                            <!-- Right-side video text section -->
                             <div class="row">
-                                <!-- Upper text section -->
                                 <div class="col-md-12">
                                     <div class="text">
                                         <p><strong>{{ video.title }}</strong></p>
                                     </div>
                                 </div>
-                                <!-- Picture and text YouTube -->
                                 <div class="col-md-12">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#F01111"
                                         class="bi bi-play-btn" viewBox="0 0 16 16">
-                                        <path
-                                            d="M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
-                                        <path
-                                            d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z" />
+                                        <path d="M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
+                                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z" />
                                     </svg>
-                                    <a href="{{ video.url }}" target="_blank"
-                                        style="text-decoration: none; color: #F01111;">Watch Video</a>
+                                    <a href="{{ video.url }}" target="_blank" style="text-decoration: none; color: #F01111;">Watch Video</a>
                                 </div>
                             </div>
-                            <!-- Description -->
                             <div class="col-md-12 mt-2">
                                 <div class="text">
                                     <p>{{ video.description }}</p>
@@ -72,6 +59,7 @@
                 <p>No results found for your search.</p>
                 {% endif %}
             </div>
+            
 
             <!-- right side container where content will be generated -->
             <div class="  col-md-5 ">
