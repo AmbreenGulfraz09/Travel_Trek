@@ -6,6 +6,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.vectorstores.faiss import FAISS
 from langchain.prompts import PromptTemplate
 from langchain_huggingface import HuggingFaceEmbeddings
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.docstore.document import Document
 from django.conf import settings
 from dotenv import load_dotenv
 from .models import SearchQuery, Transcript
@@ -17,17 +19,39 @@ embeddings = HuggingFaceEmbeddings(
     encode_kwargs={'normalize_embeddings': True}
 )
 
-def load_vector_store() -> FAISS:
+def create_query_specific_vectorstore(transcripts) -> FAISS:
     """
-    Load the FAISS vector store from disk.
+    Create a query-specific vector store from transcripts.
     """
-    if os.path.exists(settings.VECTOR_STORE_PATH):
-        return FAISS.load_local(
-            settings.VECTOR_STORE_PATH, 
-            embeddings,
-            allow_dangerous_deserialization=True
+    # Combine all transcript texts
+    all_texts = []
+    
+    for transcript in transcripts:
+        if transcript.transcript_text:
+            # Create document with metadata
+            doc = Document(
+                page_content=transcript.transcript_text,
+                metadata={
+                    "video_id": transcript.video_id,
+                    "video_title": transcript.video_title,
+                    "video_url": transcript.video_url
+                }
+            )
+            all_texts.append(doc)
+    
+    # Create vector store from documents
+    if all_texts:
+        # Optional: Split texts into chunks if they're very large
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=1000,
+            chunk_overlap=100
         )
-    raise FileNotFoundError(f"Vector store not found at {settings.VECTOR_STORE_PATH}")
+        split_texts = text_splitter.split_documents(all_texts)
+        
+        # Create and return the vector store
+        return FAISS.from_documents(split_texts, embeddings)
+    
+    return None
 
 def process_query(search_query_id: str, user_query: str) -> Dict[str, Any]:
     """
@@ -54,26 +78,48 @@ def process_query(search_query_id: str, user_query: str) -> Dict[str, Any]:
                 'answer': None
             }
         
-        # Verify transcripts have been processed
-        if transcripts.filter(transcript_text__isnull=True).exists():
+        # Check if transcripts have been processed by verifying they have content
+        incomplete_transcripts = transcripts.filter(transcript_text__isnull=True).count()
+        total_transcripts = transcripts.count()
+        
+        # If all transcripts are null, there's a problem
+        if incomplete_transcripts == total_transcripts:
             return {
                 'success': False,
-                'error': 'Some transcripts are still being processed',
+                'error': 'No transcript data is available for processing',
                 'answer': None
             }
         
-        # Load vector store
-        vector_store = load_vector_store()
+        # If some transcripts are missing but not all, we can continue with the available ones
+        # Just log a warning that some transcripts are missing
+        if incomplete_transcripts > 0:
+            print(f"Warning: {incomplete_transcripts} out of {total_transcripts} transcripts are missing for query {search_query_id}")
         
-        # Create prompt template
-        prompt_template = """
+        # Create a query-specific vector store from the available transcripts
+        vector_store = create_query_specific_vectorstore(transcripts.exclude(transcript_text__isnull=True))
+        
+        if not vector_store:
+            return {
+                'success': False,
+                'error': 'Failed to create vector store from transcripts',
+                'answer': None
+            }
+        
+        # Enhance context with guide if available
+        additional_context = ""
+        if search_query.guide_content:
+            additional_context = f"\nAdditional guide information: {search_query.guide_content}\n"
+        
+        # Create prompt template with enhanced context
+        prompt_template = f"""
         You are an assistant that answers questions about video content.
         
         Use the following video transcripts as context to answer the question.
         
-        Context: {context}
+        Context: {{context}}
+        {additional_context}
         
-        Question: {question}
+        Question: {{question}}
         
         Provide a concise, accurate answer based only on the information in the context.
         If the answer is not contained in the context, say "I don't have enough information to answer that question based on the videos."
@@ -121,12 +167,6 @@ def process_query(search_query_id: str, user_query: str) -> Dict[str, Any]:
         return {
             'success': False,
             'error': 'Search query not found',
-            'answer': None
-        }
-    except FileNotFoundError as e:
-        return {
-            'success': False,
-            'error': str(e),
             'answer': None
         }
     except Exception as e:
