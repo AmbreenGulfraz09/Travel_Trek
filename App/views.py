@@ -48,8 +48,19 @@ def admin(request):
 
 
 def adminDashboard(request):
-    return render(request, 'App/AdminDashboard.html')
-
+    search_queries = SearchQuery.objects.all().order_by('-created_at')
+    total_searches = search_queries.count()
+    successful_searches = search_queries.filter(guide_pdf__isnull=False).count()
+    failed_searches = total_searches - successful_searches
+    
+    context = {
+        'search_queries': search_queries,
+        'total_searches': total_searches,
+        'successful_searches': successful_searches,
+        'failed_searches': failed_searches,
+    }
+    
+    return render(request, 'App/AdminDashboard.html', context)
 
 
 def feedback(request):
@@ -298,3 +309,16 @@ def answer_question(request):
             }, status=500)
     
     return JsonResponse({'error': 'POST method required'}, status=400)
+
+
+from django.shortcuts import get_object_or_404
+
+def download_pdf(request, query_id):
+    query = get_object_or_404(SearchQuery, id=query_id)
+    if query.guide_pdf and query.pdf_filename:
+        response = HttpResponse(query.guide_pdf, content_type='application/pdf')
+        filename = query.pdf_filename
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+    else:
+        return HttpResponse("PDF file not available", status=404)

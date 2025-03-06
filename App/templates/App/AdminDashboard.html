@@ -115,22 +115,6 @@
         <div class="col-6 d-flex justify-content-start">
             <h4>User Stored Data</h4>
         </div>
-
-        <!-- Admin Name Accordion -->
-        <!-- <div class="col-6 col-md-6 d-flex justify-content-end">
-            <div class="accordion accordion-flush" id="accordionFlushExample">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne"
-                            style="border: 1px solid black;">
-                            Admin
-                        </button>
-                    </h2>
-                    
-                </div>
-            </div>
-        </div> -->
     </div>
 
     <!-- Analytics -->
@@ -142,43 +126,21 @@
                     <h5 >Total Searches</h5>
                 </div>
                 <div class="col-md-12 " style="text-align: center;">
-                    <h4 style="text-align: center; color: #F01111;"> 80</h4>
+                    <h4 style="text-align: center; color: #F01111;">{{ total_searches }}</h4>
                 </div>
                 <div class="col-md-12" style="text-align: center;">
                     <img src="/static/images/graph.jpeg" alt="" width="200" height="80">
                 </div>
             </div>
         </div>
-        <!-- <div class="col-md-3"  >
-               
-                    <div class="row my-3">
-                   
-                        <div class="col-md-12 col-12" style="text-align: center;">
-                            <div class="inside">
-                                <h5 clas>Total Searches</h5>
-                            </div>
-                            
-                        </div>
-                        
-                    </div>
-                    <h4 style="text-align: center; color: #F01111;">80</h4>
-                    <div class="row ">
-                        <div class="col-md-4  col-4" style="text-align: center;"></div>
-                        <div class="col-md-8  col-8" style="text-align: center;">
-                            <img src="/static/images/graph.jpeg" alt="" width="150" height="70">
-                        </div>
-                    </div>
-            </div> -->
-
-
 
             <div class="col-md-4">
                 <div class="inside" style="border: 1px solid black; border-radius: 10px;">
                     <div class="col-md-12 my-3" style="text-align: center;">
-                        <h5 >Total Searches</h5>
+                        <h5 >Successful Searches</h5>
                     </div>
                     <div class="col-md-12 " style="text-align: center;">
-                        <h4 style="text-align: center; color: #F01111;"> 80</h4>
+                        <h4 style="text-align: center; color: #F01111;">{{ successful_searches|default:0 }}</h4>
                     </div>
                     <div class="col-md-12" style="text-align: center;">
                         <img src="/static/images/graph.jpeg" alt="" width="200" height="80">
@@ -191,10 +153,10 @@
             <div class="col-md-4 col-m-4">
                 <div class="inside" style="border: 1px solid black; border-radius: 10px;">
                     <div class="col-md-12 my-3" style="text-align: center;">
-                        <h5 >Total Searches</h5>
+                        <h5 >Failed Searches</h5>
                     </div>
                     <div class="col-md-12 " style="text-align: center;">
-                        <h4 style="text-align: center; color: #F01111;"> 80</h4>
+                        <h4 style="text-align: center; color: #F01111;">{{ failed_searches|default:0 }}</h4>
                     </div>
                     <div class="col-md-12" style="text-align: center;">
                         <img src="/static/images/graph.jpeg" alt="" width="200" height="80">
@@ -212,7 +174,7 @@
    <!-- Table Section -->
 <div class="row my-5">
     <div class="col-12">
-        <div class="table-responsive" style="max-height: 200px; overflow-y: auto;"> <!-- Set a fixed height and enable vertical scrolling -->
+        <div class="table-responsive" style="max-height: 600px; overflow-y: auto;"> <!-- Set a fixed height and enable vertical scrolling -->
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -224,42 +186,24 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for query in search_queries %}
                     <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                       
+                        <td>{{ query.created_at|date:"d M Y" }}</td>
+                        <td>{{ query.query_text }}</td>
+                        <td class="truncate">{{ query.combined_summary|default:"Not available" }}</td>
+                        <td>
+                            {% if query.pdf_filename %}
+                            <a href="#" class="btn btn-sm" onclick="downloadPDF('{{ query.id }}')">{{ query.pdf_filename }}</a>
+                            {% else %}
+                            Not available
+                            {% endif %}
+                        </td>
                     </tr>
+                    {% empty %}
                     <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                       
+                        <td colspan="4" class="text-center">No search queries available</td>
                     </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Larry the Bird</td>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                        
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Larry the Bird</td>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                       
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Larry the Bird</td>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                       
-                    </tr>
-                    <!-- Additional rows can be added here -->
+                    {% endfor %}
                 </tbody>
             </table>
  
@@ -270,7 +214,13 @@
 
     </div>
 
-
+    <script>
+        function downloadPDF(queryId) {
+            // Create URL to download PDF
+            const downloadUrl = `/download-pdf/${queryId}/`;
+            window.location.href = downloadUrl;
+        }
+    </script>
 </body>
 
 </html>
