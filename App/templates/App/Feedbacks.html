@@ -9,67 +9,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Feedback Messages</title>
+    <style>
+        .most-recent {
+            background-color: #ff5353; 
+        }
+    </style>
 </head>
 <body>
-     <!-- Table Section -->
-<div class="row my-5">
-    <div class="col-12">
-        <div class="table-responsive" style="max-height: 200px; overflow-y: auto;"> <!-- Set a fixed height and enable vertical scrolling -->
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Username</th>
-                        
-                        <th scope="col">Email</th>
-                        <th scope="col">Message</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                       
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                       
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Larry the Bird</td>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                        
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Larry the Bird</td>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                       
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Larry the Bird</td>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                       
-                    </tr>
-                    <!-- Additional rows can be added here -->
-                </tbody>
-            </table>
- 
+    <!-- Table Section -->
+    <div class="row my-5">
+        <div class="col-12">
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if feedbacks %}
+                            {% for feedback in feedbacks %}
+                                {% if forloop.first %}
+                                <tr class="most-recent">
+                                {% else %}
+                                <tr>
+                                {% endif %}
+                                    <th scope="row">{{ feedback.created_at|date:"d/m/Y h:i A" }}</th>
+                                    <td>{{ feedback.username }}</td>
+                                    <td>{{ feedback.email }}</td>
+                                    <td>{{ feedback.message }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">No feedback messages found</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
-
 </body>
 </html>
 {% endblock %}
