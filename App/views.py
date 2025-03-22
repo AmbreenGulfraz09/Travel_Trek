@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from googleapiclient.discovery import build
@@ -17,7 +17,7 @@ from .tasks import transcribe_and_embed_video_task
 from concurrent.futures import ThreadPoolExecutor
 from .generations import generate_and_store_summaries, guide_generation
 from .query_processor import process_query
-from .models import Transcript, SearchQuery, Contact
+from .models import Transcript, SearchQuery, Contact , Admin
 from .forms import ContactForm
 
 
@@ -53,25 +53,72 @@ def tutorial(request):
 def result(request):
     return render(request, 'App/Result.html')
 
-
 def admin(request):
-    return render(request, 'App/AdminLogin.html')
+    # Create default admin if it doesn't exist
+    if not Admin.objects.exists():
+        Admin.objects.create(email="admin@traveltrek.com", password="TTadmin1209")
+    
+    context = {
+        'error_message': None
+    }
+    
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        # AJAX request handling
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            try:
+                admin_user = Admin.objects.get(email=email)
+                if admin_user.password == password:
+                    # Successful login - Set session variable
+                    request.session['admin_authenticated'] = True
+                    request.session['admin_email'] = email
+                    return JsonResponse({'success': True})
+                else:
+                    # Wrong password
+                    return JsonResponse({'success': False, 'message': 'Incorrect password'})
+            except Admin.DoesNotExist:
+                # Admin with this email doesn't exist
+                return JsonResponse({'success': False, 'message': 'Email not registered'})
+        
+        # Regular form submission
+        else:
+            try:
+                admin_user = Admin.objects.get(email=email)
+                if admin_user.password == password:
+                    # Successful login - Set session variable
+                    request.session['admin_authenticated'] = True
+                    request.session['admin_email'] = email
+                    return redirect('adminDashboard')
+                else:
+                    # Wrong password
+                    context['error_message'] = 'Incorrect password'
+            except Admin.DoesNotExist:
+                # Admin with this email doesn't exist
+                context['error_message'] = 'Email not registered'
+    
+    return render(request, 'App/AdminLogin.html', context)
 
 
 def adminDashboard(request):
+    # Check if user is authenticated
+    if not request.session.get('admin_authenticated', False):
+        return redirect('admin')  # Redirect to login page if not authenticated
+    
     search_queries = SearchQuery.objects.all().order_by('-created_at')
     total_searches = search_queries.count()
     successful_searches = search_queries.filter(
         guide_pdf__isnull=False).count()
     failed_searches = total_searches - successful_searches
-
+    
     context = {
         'search_queries': search_queries,
         'total_searches': total_searches,
         'successful_searches': successful_searches,
         'failed_searches': failed_searches,
     }
-
+    
     return render(request, 'App/AdminDashboard.html', context)
 
 from .models import Contact

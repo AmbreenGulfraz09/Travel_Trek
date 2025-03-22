@@ -32,3 +32,11 @@ class Contact(models.Model):
     
     def __str__(self):
         return f"{self.username} - {self.email}"
+    
+
+class Admin(models.Model):
+    email = models.EmailField(unique=True, default="admin@traveltrek.com")
+    password = models.CharField(max_length=100, default="TTadmin1209")
+    
+    def __str__(self):
+        return self.email
