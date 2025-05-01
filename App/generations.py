@@ -59,7 +59,7 @@ final_prompt_template = PromptTemplate(
 )
 
 
-def chunk_transcripts(transcripts_queryset, max_chars=10000):  # Increased max_chars
+def chunk_transcripts(transcripts_queryset, max_chars=10000):  
     """Break transcripts into smaller chunks to avoid token limits."""
     chunks = []
     current_chunk = []
