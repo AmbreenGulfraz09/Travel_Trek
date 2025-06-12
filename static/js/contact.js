@@ -1,5 +1,5 @@
 document.getElementById('submit').addEventListener('click', function (event) {
-    const nameInput = document.getElementById("exampleInputEmail1").value.trim();
+    const nameInput = document.getElementById("username").value.trim();
     const nameError = document.getElementById("nameError");
 
 

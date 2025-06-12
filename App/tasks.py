@@ -18,7 +18,6 @@ embeddings = HuggingFaceEmbeddings(
     encode_kwargs={'normalize_embeddings': True}
 )
 
-
 def load_vector_store() -> Optional[FAISS]:
     """
     Load the FAISS vector store from disk if it exists.
@@ -30,10 +29,9 @@ def load_vector_store() -> Optional[FAISS]:
         return FAISS.load_local(
             settings.VECTOR_STORE_PATH,
             embeddings,
-            allow_dangerous_deserialization=True  
+            allow_dangerous_deserialization=True
         )
     return None
-
 
 def save_vector_store(store: FAISS) -> None:
     """
@@ -51,14 +49,25 @@ def transcribe_and_embed_video_task(video_id: str, video_url: str) -> None:
         # Step 1: Load or initialize vector store
         vector_store = load_vector_store()
 
-        # Step 2: Transcribe the video
+        # Step 2: Transcribe the video with updated parameters
         loader = YoutubeLoader.from_youtube_url(
             video_url,
-            language=["en"],
-            translation="en"
+            add_video_info=False,
+            language=['en'],  # Prioritize English transcripts
+            translation= 'en',
+            continue_on_failure=True,  # Changed to True to handle errors better
         )
         docs = loader.load()
+        
+        # Check if docs is empty
+        if not docs:
+            raise Exception(f"No transcript found for video {video_id}")
+        
         transcript = " ".join([doc.page_content for doc in docs])
+        
+        # Check if transcript is empty
+        if not transcript.strip():
+            raise Exception(f"Empty transcript for video {video_id}")
 
         # Save transcript to database
         Transcript.objects.update_or_create(
