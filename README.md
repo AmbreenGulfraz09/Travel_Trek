@@ -1,4 +1,4 @@
-# 🌍 The Travel Trek – AI-Based Travel Guide Generator
+# 🌍 The Travel Trek – Automated Travel Guide Generation using Youtube Videos using LangChain
 
 **The Travel Trek** is a full-stack AI-powered web application that transforms YouTube travel videos into structured, queryable travel guides. It uses Gemini 1.5 Flash to analyze transcribed video content and generate comprehensive travel information — all presented in a clean, interactive interface.
 
