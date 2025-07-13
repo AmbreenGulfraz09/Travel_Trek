@@ -33,6 +33,7 @@ Whether you're planning your next trip or just exploring places virtually, Trave
 ---
 
 ## 📂 Project Structure
+```bash
 travel-trek/
 ├── App/ # Django project files and NLP logic
 ├── static/ # HTML templates, static files
@@ -40,6 +41,7 @@ travel-trek/
 ├── media/pdf_guides/ # Generated PDF travel guides
 ├── vector_store/faiss_index # vector store files
 └── README.md
+```
 
 💻 How to Clone and Run Locally
 
